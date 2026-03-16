@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SunStrong Management — Project Dashboard</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    ::selection { background: #171717; color: #fafaf9; }
+
+    body {
+      font-family: 'Inter Tight', sans-serif;
+      background: #fafaf9;
+      color: #171717;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .gate {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+    .gate-inner { width: 100%; max-width: 320px; text-align: center; }
+    .gate-inner svg { margin-bottom: 32px; }
+    .gate-label {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #a3a3a3; margin-bottom: 16px;
+    }
+    .gate input[type="password"] {
+      width: 100%; padding: 12px 16px; font-family: 'Inter Tight', sans-serif;
+      font-size: 14px; border: 1px solid #e5e5e5; background: #fff;
+      color: #171717; outline: none; transition: border-color 0.15s ease;
+      letter-spacing: 0.12em;
+    }
+    .gate input[type="password"]:focus { border-color: #171717; }
+    .gate input[type="password"]::placeholder { color: #d4d4d4; letter-spacing: 0.04em; }
+    .gate-error { font-size: 12px; color: #ef4444; margin-top: 10px; height: 18px; }
+    .gate-hint { font-size: 11px; color: #d4d4d4; margin-top: 24px; }
+
+    .dashboard { display: none; }
+    .dashboard.visible { display: block; }
+
+    .micro-label {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #a3a3a3;
+    }
+    .section-title {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #737373; margin-bottom: 14px;
+    }
+
+    .dash-header { padding: 32px 40px 28px; border-bottom: 1px solid #e5e5e5; }
+    .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+    .dash-header h1 { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
+    .header-meta { font-size: 13px; color: #737373; margin-top: 6px; }
+
+    .content { padding: 32px 40px 48px; max-width: 960px; }
+    .section { margin-bottom: 48px; }
+
+    .progress-track { height: 3px; background: #e5e5e5; border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: #171717; border-radius: 2px; transition: width 0.6s ease; }
+
+    .phases-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: #e5e5e5; border: 1px solid #e5e5e5;
+    }
+    .phase-card { background: #fff; padding: 20px 22px; }
+    .phase-card.active { background: #171717; color: #fafaf9; }
+    .phase-meta {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #a3a3a3; margin-bottom: 6px;
+    }
+    .phase-name { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 6px; }
+    .phase-desc { font-size: 12px; color: #737373; line-height: 1.5; }
+    .phase-card.active .phase-desc { color: #a3a3a3; }
+    .active-dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+      background: #22c55e; margin-left: 8px; vertical-align: middle;
+    }
+
+    .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 2px; }
+    .dot-done { background: #22c55e; }
+    .dot-active, .dot-inprogress { background: #111; }
+    .dot-upcoming, .dot-notstarted { background: #d4d4d4; }
+    .dot-recurring { background: #a3a3a3; }
+
+    .milestone-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+    .milestone-row:last-child { border-bottom: none; }
+    .milestone-label { font-size: 13px; flex: 1; }
+    .milestone-label.done { color: #a3a3a3; text-decoration: line-through; }
+    .milestone-label.active { font-weight: 600; }
+    .milestone-date { font-size: 12px; color: #a3a3a3; font-variant-numeric: tabular-nums; min-width: 60px; text-align: right; }
+
+    .tabs { display: flex; gap: 0; }
+    .tab-btn {
+      background: none; border: none; border-bottom: 1.5px solid transparent;
+      padding: 4px 12px 6px; font-size: 12px; font-weight: 400; color: #a3a3a3;
+      cursor: pointer; font-family: 'Inter Tight', sans-serif;
+      letter-spacing: 0.01em; transition: all 0.15s ease;
+    }
+    .tab-btn.active { border-bottom-color: #171717; font-weight: 600; color: #171717; }
+
+    .phase-group-label {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #a3a3a3; margin-bottom: 8px;
+      padding-bottom: 6px; border-bottom: 1px solid #f0f0f0;
+    }
+    .task-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; }
+    .task-name { font-size: 13px; flex: 1; }
+    .task-name.active { font-weight: 500; }
+    .task-due { font-size: 11px; color: #a3a3a3; font-variant-numeric: tabular-nums; min-width: 56px; text-align: right; }
+    .task-priority { font-size: 11px; margin-right: 12px; }
+    .task-priority.high { color: #171717; font-weight: 500; }
+    .task-priority.medium { color: #a3a3a3; }
+
+    .needs-table { background: #fff; border: 1px solid #e5e5e5; }
+    .needs-header, .needs-row { display: grid; grid-template-columns: 1fr 100px 100px; padding: 10px 18px; }
+    .needs-header {
+      border-bottom: 1px solid #e5e5e5; font-size: 10px; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase; color: #a3a3a3;
+    }
+    .needs-row { font-size: 13px; border-bottom: 1px solid #f5f5f5; }
+    .needs-row:last-child { border-bottom: none; }
+    .needs-row .when { font-size: 12px; color: #737373; }
+    .needs-row .when.urgent { color: #171717; font-weight: 600; }
+    .needs-row .owner { font-size: 12px; color: #737373; }
+
+    .dash-footer {
+      border-top: 1px solid #e5e5e5; padding-top: 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11px; color: #a3a3a3;
+    }
+
+    @media (max-width: 680px) {
+      .dash-header { padding: 24px 20px 20px; }
+      .dash-header h1 { font-size: 22px; }
+      .content { padding: 24px 20px 40px; }
+      .phases-grid { grid-template-columns: 1fr; }
+      .needs-header, .needs-row { grid-template-columns: 1fr 80px 80px; padding: 10px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ════ PASSWORD GATE ════ -->
+  <div id="gate" class="gate">
+    <div class="gate-inner">
+      <svg width="48" height="48" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4.8911 27.6641V5.90942H16.1623C23.8885 5.90942 28.7364 10.1513 28.7364 16.7867C28.7364 23.4222 23.8885 27.6641 16.1623 27.6641H4.8911ZM9.86013 23.3919H16.1623C20.8889 23.3919 23.6461 20.7862 23.6461 16.7867C23.6461 12.7873 20.8889 10.1816 16.132 10.1816H9.86013V23.3919Z" fill="#111111"/>
+        <path d="M39.7251 5.90942H60.8132V10.2422H44.6941V14.4234H59.0861V18.6956H44.6941V23.3313H60.8132V27.6641H39.7251V5.90942Z" fill="#111111"/>
+        <path d="M77.617 20.0893V27.6641H72.5571V5.90942H86.2522C91.3728 5.90942 94.7359 8.33334 94.7359 12.9994C94.7359 17.6351 91.3728 20.0893 86.2522 20.0893H77.617ZM77.617 15.8475H85.9795C88.3732 15.8475 89.7366 14.787 89.7366 12.9994C89.7366 11.2117 88.3732 10.1816 85.9795 10.1816H77.617V15.8475Z" fill="#111111"/>
+        <path d="M13.799 39.2375H19.5255L30.3422 60.9922H24.8581L22.5554 56.3261H10.6176L8.31488 60.9922H2.92167L13.799 39.2375ZM16.6168 44.2066L12.6779 52.1449H20.5254L16.6168 44.2066Z" fill="#111111"/>
+        <path d="M44.285 53.266V60.9922H39.2251V39.2375H53.0717C58.1316 39.2375 61.5251 41.6918 61.5251 46.2366C61.5251 49.5089 59.6769 51.7813 56.6167 52.7509L62.0402 60.9922H56.2531L51.3144 53.266H44.285ZM44.285 49.1453H52.799C55.1926 49.1453 56.5561 48.0848 56.5561 46.3275C56.5561 44.5399 55.1926 43.5097 52.799 43.5097H44.285V49.1453Z" fill="#111111"/>
+        <path d="M95.2813 43.5703H85.8584V60.9922H80.7984V43.5703H71.3452V39.2375H95.2813V43.5703Z" fill="#111111"/>
+        <path d="M16.2078 94.6556C8.63309 94.6556 4.87602 90.5955 4.87602 84.2933V72.5676H9.93594V83.8994C9.93594 87.7474 11.7236 90.2319 16.2078 90.2319C20.6921 90.2319 22.4494 87.7474 22.4494 83.8994V72.5676H27.5093V84.2933C27.5093 90.5955 23.7523 94.6556 16.2078 94.6556Z" fill="#111111"/>
+        <path d="M44.285 86.596V94.3223H39.2251V72.5676H53.0717C58.1316 72.5676 61.5251 75.0218 61.5251 79.5667C61.5251 82.839 59.6769 85.1114 56.6167 86.081L62.0402 94.3223H56.2531L51.3144 86.596H44.285ZM44.285 82.4754H52.799C55.1926 82.4754 56.5561 81.4149 56.5561 79.6576C56.5561 77.8699 55.1926 76.8398 52.799 76.8398H44.285V82.4754Z" fill="#111111"/>
+        <path d="M73.0571 72.5676H94.1452V76.9004H78.0261V81.0816H92.4181V85.3538H78.0261V89.9895H94.1452V94.3223H73.0571V72.5676Z" fill="#111111"/>
+      </svg>
+      <div class="gate-label">Client Dashboard</div>
+      <input type="password" id="gate-input" placeholder="Enter password" autocomplete="off" />
+      <div class="gate-error" id="gate-error"></div>
+      <div class="gate-hint">Contact your project lead for access</div>
+    </div>
+  </div>
+
+  <!-- ════ DASHBOARD ════ -->
+  <div id="dashboard" class="dashboard">
+    <header class="dash-header">
+      <div class="header-top">
+        <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4.8911 27.6641V5.90942H16.1623C23.8885 5.90942 28.7364 10.1513 28.7364 16.7867C28.7364 23.4222 23.8885 27.6641 16.1623 27.6641H4.8911ZM9.86013 23.3919H16.1623C20.8889 23.3919 23.6461 20.7862 23.6461 16.7867C23.6461 12.7873 20.8889 10.1816 16.132 10.1816H9.86013V23.3919Z" fill="#111111"/>
+          <path d="M39.7251 5.90942H60.8132V10.2422H44.6941V14.4234H59.0861V18.6956H44.6941V23.3313H60.8132V27.6641H39.7251V5.90942Z" fill="#111111"/>
+          <path d="M77.617 20.0893V27.6641H72.5571V5.90942H86.2522C91.3728 5.90942 94.7359 8.33334 94.7359 12.9994C94.7359 17.6351 91.3728 20.0893 86.2522 20.0893H77.617ZM77.617 15.8475H85.9795C88.3732 15.8475 89.7366 14.787 89.7366 12.9994C89.7366 11.2117 88.3732 10.1816 85.9795 10.1816H77.617V15.8475Z" fill="#111111"/>
+          <path d="M13.799 39.2375H19.5255L30.3422 60.9922H24.8581L22.5554 56.3261H10.6176L8.31488 60.9922H2.92167L13.799 39.2375ZM16.6168 44.2066L12.6779 52.1449H20.5254L16.6168 44.2066Z" fill="#111111"/>
+          <path d="M44.285 53.266V60.9922H39.2251V39.2375H53.0717C58.1316 39.2375 61.5251 41.6918 61.5251 46.2366C61.5251 49.5089 59.6769 51.7813 56.6167 52.7509L62.0402 60.9922H56.2531L51.3144 53.266H44.285ZM44.285 49.1453H52.799C55.1926 49.1453 56.5561 48.0848 56.5561 46.3275C56.5561 44.5399 55.1926 43.5097 52.799 43.5097H44.285V49.1453Z" fill="#111111"/>
+          <path d="M95.2813 43.5703H85.8584V60.9922H80.7984V43.5703H71.3452V39.2375H95.2813V43.5703Z" fill="#111111"/>
+          <path d="M16.2078 94.6556C8.63309 94.6556 4.87602 90.5955 4.87602 84.2933V72.5676H9.93594V83.8994C9.93594 87.7474 11.7236 90.2319 16.2078 90.2319C20.6921 90.2319 22.4494 87.7474 22.4494 83.8994V72.5676H27.5093V84.2933C27.5093 90.5955 23.7523 94.6556 16.2078 94.6556Z" fill="#111111"/>
+          <path d="M44.285 86.596V94.3223H39.2251V72.5676H53.0717C58.1316 72.5676 61.5251 75.0218 61.5251 79.5667C61.5251 82.839 59.6769 85.1114 56.6167 86.081L62.0402 94.3223H56.2531L51.3144 86.596H44.285ZM44.285 82.4754H52.799C55.1926 82.4754 56.5561 81.4149 56.5561 79.6576C56.5561 77.8699 55.1926 76.8398 52.799 76.8398H44.285V82.4754Z" fill="#111111"/>
+          <path d="M73.0571 72.5676H94.1452V76.9004H78.0261V81.0816H92.4181V85.3538H78.0261V89.9895H94.1452V94.3223H73.0571V72.5676Z" fill="#111111"/>
+        </svg>
+        <div style="text-align: right;">
+          <div class="micro-label" id="week-label"></div>
+          <div style="font-size: 13px; color: #737373; margin-top: 4px;" id="updated-label"></div>
+        </div>
+      </div>
+      <div>
+        <div class="micro-label" style="margin-bottom: 6px;">Client Dashboard</div>
+        <h1 id="client-name"></h1>
+        <div class="header-meta" id="engagement-meta"></div>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="section">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px;">
+          <span class="micro-label">Engagement Progress</span>
+          <span style="font-size: 12px; color: #a3a3a3;" id="date-range"></span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Project Phases</div>
+        <div class="phases-grid" id="phases-grid"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Key Milestones</div>
+        <div id="milestones-list"></div>
+      </div>
+
+      <div class="section">
+        <div style="display: flex; align-items: baseline; gap: 24px; margin-bottom: 16px;">
+          <div class="section-title" style="margin-bottom: 0;">Tasks</div>
+          <div class="tabs" id="task-tabs"></div>
+        </div>
+        <div id="tasks-container"></div>
+      </div>
+
+      <div class="section" id="needs-section">
+        <div class="section-title">Needs from SunStrong</div>
+        <div class="needs-table" id="needs-table"></div>
+      </div>
+
+      <footer class="dash-footer">
+        <span>Confidential — prepared for SunStrong Management</span>
+        <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4.8911 27.6641V5.90942H16.1623C23.8885 5.90942 28.7364 10.1513 28.7364 16.7867C28.7364 23.4222 23.8885 27.6641 16.1623 27.6641H4.8911ZM9.86013 23.3919H16.1623C20.8889 23.3919 23.6461 20.7862 23.6461 16.7867C23.6461 12.7873 20.8889 10.1816 16.132 10.1816H9.86013V23.3919Z" fill="#111111"/>
+          <path d="M39.7251 5.90942H60.8132V10.2422H44.6941V14.4234H59.0861V18.6956H44.6941V23.3313H60.8132V27.6641H39.7251V5.90942Z" fill="#111111"/>
+          <path d="M77.617 20.0893V27.6641H72.5571V5.90942H86.2522C91.3728 5.90942 94.7359 8.33334 94.7359 12.9994C94.7359 17.6351 91.3728 20.0893 86.2522 20.0893H77.617ZM77.617 15.8475H85.9795C88.3732 15.8475 89.7366 14.787 89.7366 12.9994C89.7366 11.2117 88.3732 10.1816 85.9795 10.1816H77.617V15.8475Z" fill="#111111"/>
+          <path d="M13.799 39.2375H19.5255L30.3422 60.9922H24.8581L22.5554 56.3261H10.6176L8.31488 60.9922H2.92167L13.799 39.2375ZM16.6168 44.2066L12.6779 52.1449H20.5254L16.6168 44.2066Z" fill="#111111"/>
+          <path d="M44.285 53.266V60.9922H39.2251V39.2375H53.0717C58.1316 39.2375 61.5251 41.6918 61.5251 46.2366C61.5251 49.5089 59.6769 51.7813 56.6167 52.7509L62.0402 60.9922H56.2531L51.3144 53.266H44.285ZM44.285 49.1453H52.799C55.1926 49.1453 56.5561 48.0848 56.5561 46.3275C56.5561 44.5399 55.1926 43.5097 52.799 43.5097H44.285V49.1453Z" fill="#111111"/>
+          <path d="M95.2813 43.5703H85.8584V60.9922H80.7984V43.5703H71.3452V39.2375H95.2813V43.5703Z" fill="#111111"/>
+          <path d="M16.2078 94.6556C8.63309 94.6556 4.87602 90.5955 4.87602 84.2933V72.5676H9.93594V83.8994C9.93594 87.7474 11.7236 90.2319 16.2078 90.2319C20.6921 90.2319 22.4494 87.7474 22.4494 83.8994V72.5676H27.5093V84.2933C27.5093 90.5955 23.7523 94.6556 16.2078 94.6556Z" fill="#111111"/>
+          <path d="M44.285 86.596V94.3223H39.2251V72.5676H53.0717C58.1316 72.5676 61.5251 75.0218 61.5251 79.5667C61.5251 82.839 59.6769 85.1114 56.6167 86.081L62.0402 94.3223H56.2531L51.3144 86.596H44.285ZM44.285 82.4754H52.799C55.1926 82.4754 56.5561 81.4149 56.5561 79.6576C56.5561 77.8699 55.1926 76.8398 52.799 76.8398H44.285V82.4754Z" fill="#111111"/>
+          <path d="M73.0571 72.5676H94.1452V76.9004H78.0261V81.0816H92.4181V85.3538H78.0261V89.9895H94.1452V94.3223H73.0571V72.5676Z" fill="#111111"/>
+        </svg>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+  // ══════════════════════════════════════════
+  // CONFIG
+  // ══════════════════════════════════════════
+
+  // Password: "deptxsunstrong26"
+  const PASSWORD_HASH = "3867da6e50ffd505c7272e6f450c988f7e227a2b22fa8a156040e51cb709ab3a";
+
+  const ENGAGEMENT = {
+    client: "SunStrong Management",
+    lead: "Ben Fogarty",
+    type: "Fractional Design Leadership",
+    startDate: "2026-03-13",
+    endDate: "2026-06-15",
+    lastUpdated: "2026-03-16",
+    totalWeeks: 12,
+    dateRangeLabel: "Mar 13 – Jun 15, 2026",
+  };
+
+  const PHASES = [
+    { id: "discovery", label: "Discovery & Audit", weeks: "1–3", dates: "Mar 13 – Apr 3", status: "active", description: "Brand audit, agency alignment, site strategy, content planning" },
+    { id: "design", label: "Design & Development", weeks: "4–8", dates: "Apr 6 – May 22", status: "upcoming", description: "Creative direction, page design, build, QA, and launch" },
+    { id: "iteration", label: "Iteration & Extension", weeks: "9–12", dates: "May 25 – Jun 15", status: "upcoming", description: "Live feedback, refinements, and extended deliverables" },
+  ];
+
+  const MILESTONES = [
+    { label: "Engagement start", date: "Mar 13", status: "done" },
+    { label: "Brand audit complete", date: "Mar 27", status: "active" },
+    { label: "Site strategy locked", date: "Apr 1", status: "upcoming" },
+    { label: "Creative direction approved", date: "Apr 13", status: "upcoming" },
+    { label: "Homepage design approved", date: "Apr 20", status: "upcoming" },
+    { label: "Launch 1 — site live", date: "May 22", status: "upcoming" },
+    { label: "Launch 2 — iteration complete", date: "Jun 15", status: "upcoming" },
+  ];
+
+  const TASK_GROUPS = {
+    website: {
+      label: "Website Project",
+      sections: [
+        { label: "Discovery & Audit · Wks 1–3", tasks: [
+          { name: "Brand audit", due: "Mar 27", status: "In Progress" },
+          { name: "Review existing agency work", due: "Mar 23", status: "In Progress" },
+          { name: "Site strategy and content planning", due: "Apr 1", status: "Not Started" },
+          { name: "Site architecture / sitemap", due: "Apr 3", status: "Not Started" },
+          { name: "Gather content and assets from client", due: "Apr 3", status: "Not Started" },
+        ]},
+        { label: "Design & Development · Wks 4–8", tasks: [
+          { name: "Creative direction / territories", due: "Apr 13", status: "Not Started" },
+          { name: "Homepage design", due: "Apr 20", status: "Not Started" },
+          { name: "Inner page designs", due: "Apr 29", status: "Not Started" },
+          { name: "Platform setup and CMS architecture", due: "May 1", status: "Not Started" },
+          { name: "Build — homepage and global components", due: "May 8", status: "Not Started" },
+          { name: "Build — inner pages and CMS templates", due: "May 15", status: "Not Started" },
+          { name: "QA, responsive testing, and polish", due: "May 18", status: "Not Started" },
+          { name: "Launch 1 — live site", due: "May 22", status: "Not Started" },
+        ]},
+        { label: "Iteration & Extension · Wks 9–12", tasks: [
+          { name: "Collect live site feedback", due: "May 29", status: "Not Started" },
+          { name: "Website refinements and iteration", due: "Jun 12", status: "Not Started" },
+          { name: "Launch 2 — iteration complete", due: "Jun 15", status: "Not Started" },
+        ]},
+      ],
+    },
+    retainer: {
+      label: "Retainer",
+      tasks: [
+        { name: "Kickoff and onboarding", due: "Mar 18", priority: "High", status: "In Progress" },
+        { name: "Collect all existing brand assets and agency work", due: "Mar 20", priority: "High", status: "In Progress" },
+        { name: "Establish coordination with identity agency", due: "Mar 20", priority: "High", status: "In Progress" },
+        { name: "Weekly sync with SunStrong team", due: "Ongoing", priority: "Medium", status: "Recurring" },
+        { name: "Identify Month 3 extension priorities", due: "May 1", priority: "Medium", status: "Not Started" },
+      ],
+    },
+  };
+
+  const NEEDS = [
+    { item: "Existing brand assets and agency files", urgency: "Now", owner: "SunStrong" },
+    { item: "Identity agency intro / coordination call", urgency: "This week", owner: "SunStrong" },
+    { item: "Hosting credentials and current analytics", urgency: "This week", owner: "SunStrong" },
+    { item: "Copy, photography, team bios, testimonials", urgency: "By Apr 3", owner: "SunStrong" },
+    { item: "Stakeholder input on site goals and audiences", urgency: "By Mar 27", owner: "SunStrong" },
+  ];
+
+  // ══════════════════════════════════════════
+  // ENGINE — no need to edit below
+  // ══════════════════════════════════════════
+
+  async function hashPassword(pw) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(pw));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  function dotClass(s) {
+    return { done:"dot-done", active:"dot-active", upcoming:"dot-upcoming",
+      "In Progress":"dot-inprogress", "Not Started":"dot-notstarted", Recurring:"dot-recurring" }[s] || "dot-upcoming";
+  }
+
+  // Auth
+  const gateInput = document.getElementById("gate-input");
+  const gateError = document.getElementById("gate-error");
+
+  if (sessionStorage.getItem("dash_sunstrong") === "1") {
+    document.getElementById("gate").style.display = "none";
+    document.getElementById("dashboard").classList.add("visible");
+  }
+
+  gateInput.addEventListener("keydown", async (e) => {
+    if (e.key === "Enter") {
+      const hash = await hashPassword(gateInput.value);
+      if (hash === PASSWORD_HASH) {
+        sessionStorage.setItem("dash_sunstrong", "1");
+        document.getElementById("gate").style.display = "none";
+        document.getElementById("dashboard").classList.add("visible");
+      } else {
+        gateError.textContent = "Incorrect password";
+        gateInput.value = "";
+        gateInput.focus();
+      }
+    }
+  });
+
+  // Render
+  function render() {
+    const start = new Date(ENGAGEMENT.startDate);
+    const end = new Date(ENGAGEMENT.endDate);
+    const now = new Date();
+    const week = Math.max(1, Math.min(Math.ceil(((now - start) / 864e5 + 1) / 7), ENGAGEMENT.totalWeeks));
+    const progress = Math.min(Math.max(((now - start) / (end - start)) * 100, 0), 100);
+
+    document.getElementById("week-label").textContent = "Week " + week + " of " + ENGAGEMENT.totalWeeks;
+    document.getElementById("updated-label").textContent = "Updated " + ENGAGEMENT.lastUpdated;
+    document.getElementById("client-name").textContent = ENGAGEMENT.client;
+    document.getElementById("engagement-meta").textContent = ENGAGEMENT.type + " · " + ENGAGEMENT.lead;
+    document.getElementById("date-range").textContent = ENGAGEMENT.dateRangeLabel;
+    document.getElementById("progress-fill").style.width = progress + "%";
+
+    // Phases
+    document.getElementById("phases-grid").innerHTML = PHASES.map(function(p) {
+      return '<div class="phase-card ' + (p.status === "active" ? "active" : "") + '">' +
+        '<div class="phase-meta">Weeks ' + p.weeks + ' · ' + p.dates + '</div>' +
+        '<div class="phase-name">' + p.label + (p.status === "active" ? '<span class="active-dot"></span>' : '') + '</div>' +
+        '<div class="phase-desc">' + p.description + '</div></div>';
+    }).join("");
+
+    // Milestones
+    document.getElementById("milestones-list").innerHTML = MILESTONES.map(function(m) {
+      return '<div class="milestone-row"><span class="dot ' + dotClass(m.status) + '"></span>' +
+        '<span class="milestone-label ' + m.status + '">' + m.label + '</span>' +
+        '<span class="milestone-date">' + m.date + '</span></div>';
+    }).join("");
+
+    // Tasks
+    var tabsEl = document.getElementById("task-tabs");
+    var container = document.getElementById("tasks-container");
+    var keys = Object.keys(TASK_GROUPS);
+
+    keys.forEach(function(key, idx) {
+      var group = TASK_GROUPS[key];
+      var btn = document.createElement("button");
+      btn.className = "tab-btn" + (idx === 0 ? " active" : "");
+      btn.dataset.tab = key;
+      btn.textContent = group.label;
+      tabsEl.appendChild(btn);
+
+      var panel = document.createElement("div");
+      panel.id = "tasks-" + key;
+      panel.style.display = idx === 0 ? "block" : "none";
+
+      if (group.sections) {
+        group.sections.forEach(function(section) {
+          var html = '<div style="margin-bottom:24px"><div class="phase-group-label">' + section.label + '</div>';
+          section.tasks.forEach(function(t) {
+            html += '<div class="task-row"><span class="dot ' + dotClass(t.status) + '"></span>' +
+              '<span class="task-name ' + (t.status === "In Progress" ? "active" : "") + '">' + t.name + '</span>' +
+              '<span class="task-due">' + t.due + '</span></div>';
+          });
+          html += '</div>';
+          panel.innerHTML += html;
+        });
+      } else {
+        group.tasks.forEach(function(t, i) {
+          panel.innerHTML += '<div class="task-row"' + (i < group.tasks.length - 1 ? ' style="border-bottom:1px solid #f0f0f0"' : '') + '>' +
+            '<span class="dot ' + dotClass(t.status) + '"></span>' +
+            '<span class="task-name ' + (t.status === "In Progress" ? "active" : "") + '">' + t.name + '</span>' +
+            (t.priority ? '<span class="task-priority ' + t.priority.toLowerCase() + '">' + t.priority + '</span>' : '') +
+            '<span class="task-due">' + t.due + '</span></div>';
+        });
+      }
+      container.appendChild(panel);
+    });
+
+    tabsEl.querySelectorAll(".tab-btn").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        tabsEl.querySelectorAll(".tab-btn").forEach(function(b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        keys.forEach(function(k) {
+          document.getElementById("tasks-" + k).style.display = k === btn.dataset.tab ? "block" : "none";
+        });
+      });
+    });
+
+    // Needs
+    var nHTML = '<div class="needs-header"><span>Item</span><span>When</span><span>Owner</span></div>';
+    NEEDS.forEach(function(n) {
+      nHTML += '<div class="needs-row"><span>' + n.item + '</span>' +
+        '<span class="when ' + (n.urgency === "Now" ? "urgent" : "") + '">' + n.urgency + '</span>' +
+        '<span class="owner">' + n.owner + '</span></div>';
+    });
+    document.getElementById("needs-table").innerHTML = nHTML;
+  }
+
+  render();
+  </script>
+
+</body>
+</html>
