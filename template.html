@@ -1,0 +1,77 @@
+<!-- Departure Studio — Client Dashboard Template -->
+<!-- Each client page includes this via the same structure -->
+
+<!-- ════ PASSWORD GATE ════ -->
+<div id="gate" class="gate">
+  <div class="gate-inner">
+    <div id="gate-logo"></div>
+    <div class="gate-label">Client Dashboard</div>
+    <input type="password" id="gate-input" placeholder="Enter password" autocomplete="off" />
+    <div class="gate-error" id="gate-error"></div>
+    <div class="gate-hint">Contact your project lead for access</div>
+  </div>
+</div>
+
+<!-- ════ DASHBOARD ════ -->
+<div id="dashboard" class="dashboard">
+  <header class="dash-header">
+    <div class="header-top">
+      <div id="header-logo"></div>
+      <div style="text-align: right;">
+        <div class="micro-label" id="week-label"></div>
+        <div style="font-size: 13px; color: var(--muted); margin-top: 4px;" id="updated-label"></div>
+      </div>
+    </div>
+    <div>
+      <div class="micro-label" style="margin-bottom: 6px;">Client Dashboard</div>
+      <h1 id="client-name"></h1>
+      <div class="header-meta" id="engagement-meta"></div>
+    </div>
+  </header>
+
+  <div class="content">
+    <!-- Progress -->
+    <div class="section">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px;">
+        <span class="micro-label">Engagement Progress</span>
+        <span style="font-size: 12px; color: var(--faint);" id="date-range"></span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- Phases -->
+    <div class="section">
+      <div class="section-title">Project Phases</div>
+      <div class="phases-grid" id="phases-grid"></div>
+    </div>
+
+    <!-- Milestones -->
+    <div class="section">
+      <div class="section-title">Key Milestones</div>
+      <div id="milestones-list"></div>
+    </div>
+
+    <!-- Tasks -->
+    <div class="section">
+      <div style="display: flex; align-items: baseline; gap: 24px; margin-bottom: 16px;">
+        <div class="section-title" style="margin-bottom: 0;">Tasks</div>
+        <div class="tabs" id="task-tabs"></div>
+      </div>
+      <div id="tasks-container"></div>
+    </div>
+
+    <!-- Needs (optional — hidden if empty) -->
+    <div class="section" id="needs-section" style="display: none;">
+      <div class="section-title" id="needs-title">Needs from Client</div>
+      <div class="needs-table" id="needs-table"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="dash-footer">
+      <span id="footer-client"></span>
+      <div id="footer-logo"></div>
+    </footer>
+  </div>
+</div>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SunStrong Management — Project Dashboard</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="/shared/styles.css" />
+</head>
+<body>
+
+  <!-- Template shell (loaded inline for zero-JS-dependency rendering) -->
+  <!-- ════ PASSWORD GATE ════ -->
+  <div id="gate" class="gate">
+    <div class="gate-inner">
+      <div id="gate-logo"></div>
+      <div class="gate-label">Client Dashboard</div>
+      <input type="password" id="gate-input" placeholder="Enter password" autocomplete="off" />
+      <div class="gate-error" id="gate-error"></div>
+      <div class="gate-hint">Contact your project lead for access</div>
+    </div>
+  </div>
+
+  <div id="dashboard" class="dashboard">
+    <header class="dash-header">
+      <div class="header-top">
+        <div id="header-logo"></div>
+        <div style="text-align: right;">
+          <div class="micro-label" id="week-label"></div>
+          <div style="font-size: 13px; color: var(--muted); margin-top: 4px;" id="updated-label"></div>
+        </div>
+      </div>
+      <div>
+        <div class="micro-label" style="margin-bottom: 6px;">Client Dashboard</div>
+        <h1 id="client-name"></h1>
+        <div class="header-meta" id="engagement-meta"></div>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="section">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px;">
+          <span class="micro-label">Engagement Progress</span>
+          <span style="font-size: 12px; color: var(--faint);" id="date-range"></span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Project Phases</div>
+        <div class="phases-grid" id="phases-grid"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Key Milestones</div>
+        <div id="milestones-list"></div>
+      </div>
+
+      <div class="section">
+        <div style="display: flex; align-items: baseline; gap: 24px; margin-bottom: 16px;">
+          <div class="section-title" style="margin-bottom: 0;">Tasks</div>
+          <div class="tabs" id="task-tabs"></div>
+        </div>
+        <div id="tasks-container"></div>
+      </div>
+
+      <div class="section" id="needs-section" style="display: none;">
+        <div class="section-title" id="needs-title">Needs from SunStrong</div>
+        <div class="needs-table" id="needs-table"></div>
+      </div>
+
+      <footer class="dash-footer">
+        <span id="footer-client"></span>
+        <div id="footer-logo"></div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Shared engine -->
+  <script src="/shared/engine.js"></script>
+
+  <!-- ══════════════════════════════════════════════════
+       CLIENT DATA — Edit this section to update the dashboard
+       ══════════════════════════════════════════════════ -->
+  <script>
+
+  // Password: "deptxsunstrong26"
+  const PASSWORD_HASH = "3867da6e50ffd505c7272e6f450c988f7e227a2b22fa8a156040e51cb709ab3a";
+
+  const CLIENT_DATA = {
+    engagement: {
+      client: "SunStrong Management",
+      lead: "Ben Fogarty",
+      type: "Fractional Design Leadership",
+      startDate: "2026-03-13",
+      endDate: "2026-06-15",
+      lastUpdated: "2026-03-16",
+      totalWeeks: 12,
+      dateRangeLabel: "Mar 13 – Jun 15, 2026",
+    },
+
+    phases: [
+      { id: "discovery", label: "Discovery & Audit", weeks: "1–3", dates: "Mar 13 – Apr 3", status: "active", description: "Brand audit, agency alignment, site strategy, content planning" },
+      { id: "design", label: "Design & Development", weeks: "4–8", dates: "Apr 6 – May 22", status: "upcoming", description: "Creative direction, page design, build, QA, and launch" },
+      { id: "iteration", label: "Iteration & Extension", weeks: "9–12", dates: "May 25 – Jun 15", status: "upcoming", description: "Live feedback, refinements, and extended deliverables" },
+    ],
+
+    milestones: [
+      { label: "Engagement start", date: "Mar 13", status: "done" },
+      { label: "Brand audit complete", date: "Mar 27", status: "active" },
+      { label: "Site strategy locked", date: "Apr 1", status: "upcoming" },
+      { label: "Creative direction approved", date: "Apr 13", status: "upcoming" },
+      { label: "Homepage design approved", date: "Apr 20", status: "upcoming" },
+      { label: "Launch 1 — site live", date: "May 22", status: "upcoming" },
+      { label: "Launch 2 — iteration complete", date: "Jun 15", status: "upcoming" },
+    ],
+
+    taskGroups: {
+      website: {
+        label: "Website Project",
+        sections: [
+          {
+            label: "Discovery & Audit · Wks 1–3",
+            tasks: [
+              { name: "Brand audit", due: "Mar 27", status: "In Progress" },
+              { name: "Review existing agency work", due: "Mar 23", status: "In Progress" },
+              { name: "Site strategy and content planning", due: "Apr 1", status: "Not Started" },
+              { name: "Site architecture / sitemap", due: "Apr 3", status: "Not Started" },
+              { name: "Gather content and assets from client", due: "Apr 3", status: "Not Started" },
+            ],
+          },
+          {
+            label: "Design & Development · Wks 4–8",
+            tasks: [
+              { name: "Creative direction / territories", due: "Apr 13", status: "Not Started" },
+              { name: "Homepage design", due: "Apr 20", status: "Not Started" },
+              { name: "Inner page designs", due: "Apr 29", status: "Not Started" },
+              { name: "Platform setup and CMS architecture", due: "May 1", status: "Not Started" },
+              { name: "Build — homepage and global components", due: "May 8", status: "Not Started" },
+              { name: "Build — inner pages and CMS templates", due: "May 15", status: "Not Started" },
+              { name: "QA, responsive testing, and polish", due: "May 18", status: "Not Started" },
+              { name: "Launch 1 — live site", due: "May 22", status: "Not Started" },
+            ],
+          },
+          {
+            label: "Iteration & Extension · Wks 9–12",
+            tasks: [
+              { name: "Collect live site feedback", due: "May 29", status: "Not Started" },
+              { name: "Website refinements and iteration", due: "Jun 12", status: "Not Started" },
+              { name: "Launch 2 — iteration complete", due: "Jun 15", status: "Not Started" },
+            ],
+          },
+        ],
+      },
+      retainer: {
+        label: "Retainer",
+        tasks: [
+          { name: "Kickoff and onboarding", due: "Mar 18", priority: "High", status: "In Progress" },
+          { name: "Collect all existing brand assets and agency work", due: "Mar 20", priority: "High", status: "In Progress" },
+          { name: "Establish coordination with identity agency", due: "Mar 20", priority: "High", status: "In Progress" },
+          { name: "Weekly sync with SunStrong team", due: "Ongoing", priority: "Medium", status: "Recurring" },
+          { name: "Identify Month 3 extension priorities", due: "May 1", priority: "Medium", status: "Not Started" },
+        ],
+      },
+    },
+
+    needs: [
+      { item: "Existing brand assets and agency files", urgency: "Now", owner: "SunStrong" },
+      { item: "Identity agency intro / coordination call", urgency: "This week", owner: "SunStrong" },
+      { item: "Hosting credentials and current analytics", urgency: "This week", owner: "SunStrong" },
+      { item: "Copy, photography, team bios, testimonials", urgency: "By Apr 3", owner: "SunStrong" },
+      { item: "Stakeholder input on site goals and audiences", urgency: "By Mar 27", owner: "SunStrong" },
+    ],
+  };
+
+  // ── Initialize ──
+  document.getElementById("gate-logo").innerHTML = logo(48);
+  initGate(PASSWORD_HASH, "dash_sunstrong");
+  renderDashboard(CLIENT_DATA);
+
+  </script>
+</body>
+</html>
