@@ -262,7 +262,7 @@
     type: "Fractional Design Leadership",
     startDate: "2026-03-13",
     endDate: "2026-06-15",
-    lastUpdated: "2026-03-16",
+    lastUpdated: "2026-03-17",
     totalWeeks: 12,
     dateRangeLabel: "Mar 13 – Jun 15, 2026",
   };
@@ -275,6 +275,7 @@
 
   const MILESTONES = [
     { label: "Engagement start", date: "Mar 13", status: "done" },
+    { label: "Kickoff meeting", date: "Mar 16", status: "done" },
     { label: "Brand audit complete", date: "Mar 27", status: "active" },
     { label: "Site strategy locked", date: "Apr 1", status: "upcoming" },
     { label: "Creative direction approved", date: "Apr 13", status: "upcoming" },
@@ -314,21 +315,21 @@
     retainer: {
       label: "Retainer",
       tasks: [
-        { name: "Kickoff and onboarding", due: "Mar 18", priority: "High", status: "In Progress" },
+        { name: "Kickoff and onboarding", due: "Mar 18", priority: "High", status: "Complete" },
         { name: "Collect all existing brand assets and agency work", due: "Mar 20", priority: "High", status: "In Progress" },
         { name: "Establish coordination with identity agency", due: "Mar 20", priority: "High", status: "In Progress" },
-        { name: "Weekly sync with SunStrong team", due: "Ongoing", priority: "Medium", status: "Recurring" },
+        { name: "Weekly sync — Tuesdays 4pm EST", due: "Ongoing", priority: "Medium", status: "Recurring" },
         { name: "Identify Month 3 extension priorities", due: "May 1", priority: "Medium", status: "Not Started" },
       ],
     },
   };
 
   const NEEDS = [
-    { item: "Existing brand assets and agency files", urgency: "Now", owner: "SunStrong" },
-    { item: "Identity agency intro / coordination call", urgency: "This week", owner: "SunStrong" },
-    { item: "Hosting credentials and current analytics", urgency: "This week", owner: "SunStrong" },
-    { item: "Copy, photography, team bios, testimonials", urgency: "By Apr 3", owner: "SunStrong" },
-    { item: "Stakeholder input on site goals and audiences", urgency: "By Mar 27", owner: "SunStrong" },
+    { item: "Brand agency brief and supporting docs", urgency: "This week", owner: "Lauren" },
+    { item: "Recommend attendees for stakeholder interviews", urgency: "This week", owner: "Lauren" },
+    { item: "Brand assets and existing materials", urgency: "This week", owner: "Lauren" },
+    { item: "Schedule bi-weekly sprint retro", urgency: "This week", owner: "Ben / Lauren" },
+    { item: "Content: copy, photos, testimonials, bios", urgency: "By Apr 3", owner: "SunStrong" },
   ];
 
   // ══════════════════════════════════════════
@@ -342,7 +343,7 @@
 
   function dotClass(s) {
     return { done:"dot-done", active:"dot-active", upcoming:"dot-upcoming",
-      "In Progress":"dot-inprogress", "Not Started":"dot-notstarted", Recurring:"dot-recurring" }[s] || "dot-upcoming";
+      "In Progress":"dot-inprogress", "Not Started":"dot-notstarted", Recurring:"dot-recurring", Complete:"dot-done" }[s] || "dot-upcoming";
   }
 
   // Auth
