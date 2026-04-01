@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SunStrong Management — Project Dashboard</title>
+  <title>Departure — Client Dashboard</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,7 +20,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── Gate ── */
     .gate {
       min-height: 100vh;
       display: flex;
@@ -44,244 +43,11 @@
     .gate input::placeholder { color: #d4d4d4; letter-spacing: 0.04em; }
     .gate-error { font-size: 12px; color: #ef4444; margin-top: 10px; height: 18px; }
     .gate-hint { font-size: 11px; color: #d4d4d4; margin-top: 24px; }
-
-    /* ── Dashboard ── */
-    .dashboard { display: none; }
-    .dashboard.visible { display: block; }
-
-    /* ── Micro Labels ── */
-    .micro {
-      font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
-      text-transform: uppercase; color: #a3a3a3;
-    }
-
-    /* ── Header ── */
-    .header {
-      padding: 40px 48px 36px;
-      border-bottom: 2px solid #171717;
-    }
-    .header-top {
-      display: flex; justify-content: space-between;
-      align-items: flex-start; margin-bottom: 32px;
-    }
-    .header h1 {
-      font-size: 48px; font-weight: 700; letter-spacing: -0.035em;
-      line-height: 1.0; margin-top: 8px;
-    }
-    .header-meta {
-      font-size: 13px; color: #737373; margin-top: 10px;
-      font-weight: 400; letter-spacing: 0.01em;
-    }
-    .header-right { text-align: right; }
-    .week-display {
-      font-size: 64px; font-weight: 700; letter-spacing: -0.04em;
-      line-height: 0.85; color: #171717;
-    }
-    .week-sub {
-      font-size: 12px; color: #a3a3a3; margin-top: 8px;
-      font-weight: 400;
-    }
-
-    /* ── Content ── */
-    .content { padding: 0 48px 64px; max-width: 1000px; }
-    .section { padding-top: 48px; }
-    .section-label {
-      font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
-      text-transform: uppercase; color: #a3a3a3;
-      padding-bottom: 12px; border-bottom: 1px solid #e5e5e5;
-      margin-bottom: 24px;
-    }
-
-    /* ── Progress ── */
-    .progress-row {
-      display: flex; justify-content: space-between;
-      align-items: baseline; margin-bottom: 12px;
-    }
-    .progress-track {
-      height: 2px; background: #e5e5e5;
-      position: relative;
-    }
-    .progress-fill {
-      height: 100%; background: #171717;
-      transition: width 0.6s ease;
-    }
-    .progress-marker {
-      position: absolute; top: -4px;
-      width: 10px; height: 10px; border-radius: 50%;
-      background: #171717; border: 2px solid #fafaf9;
-      transform: translateX(-50%);
-    }
-
-    /* ── Phases ── */
-    .phases {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 0; border: 2px solid #171717;
-    }
-    .phase {
-      padding: 28px 24px; position: relative;
-      border-right: 1px solid #e5e5e5;
-    }
-    .phase:last-child { border-right: none; }
-    .phase.active {
-      background: #171717; color: #fafaf9;
-      border-right-color: #171717;
-    }
-    .phase-weeks {
-      font-size: 32px; font-weight: 700;
-      letter-spacing: -0.03em; line-height: 1;
-      margin-bottom: 12px;
-    }
-    .phase.active .phase-weeks { color: #fafaf9; }
-    .phase-name {
-      font-size: 14px; font-weight: 600;
-      letter-spacing: -0.01em; margin-bottom: 8px;
-    }
-    .phase-dates {
-      font-size: 11px; color: #a3a3a3; margin-bottom: 8px;
-    }
-    .phase-desc {
-      font-size: 11px; color: #737373; line-height: 1.5;
-    }
-    .phase.active .phase-desc { color: #a3a3a3; }
-    .phase-active-bar {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      height: 3px; background: #22c55e;
-    }
-
-    /* ── Milestones ── */
-    .ms-row {
-      display: flex; align-items: baseline;
-      padding: 9px 0; border-bottom: 1px solid #f0f0f0;
-    }
-    .ms-row:last-child { border-bottom: none; }
-    .ms-marker {
-      width: 8px; height: 8px; border-radius: 50%;
-      flex-shrink: 0; margin-right: 14px; margin-top: 3px;
-    }
-    .ms-done { background: #22c55e; }
-    .ms-active { background: #171717; }
-    .ms-upcoming { background: #d4d4d4; }
-    .ms-label {
-      font-size: 14px; flex: 1; font-weight: 400;
-    }
-    .ms-label.done { color: #a3a3a3; text-decoration: line-through; }
-    .ms-label.active { font-weight: 600; }
-    .ms-date {
-      font-size: 12px; color: #a3a3a3;
-      font-variant-numeric: tabular-nums;
-      min-width: 64px; text-align: right;
-    }
-
-    /* ── Tabs ── */
-    .tabs-header {
-      display: flex; align-items: baseline; gap: 24px;
-      margin-bottom: 24px;
-    }
-    .tabs { display: flex; gap: 0; }
-    .tab-btn {
-      background: none; border: none;
-      border-bottom: 2px solid transparent;
-      padding: 4px 14px 8px; font-size: 12px;
-      font-weight: 400; color: #a3a3a3; cursor: pointer;
-      font-family: 'Inter Tight', sans-serif;
-      letter-spacing: 0.02em; transition: all 0.15s ease;
-    }
-    .tab-btn.active {
-      border-bottom-color: #171717;
-      font-weight: 600; color: #171717;
-    }
-
-    /* ── Tasks ── */
-    .task-group { margin-bottom: 28px; }
-    .task-group-label {
-      font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
-      text-transform: uppercase; color: #a3a3a3;
-      margin-bottom: 10px; padding-bottom: 8px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    .task-row {
-      display: flex; align-items: center;
-      gap: 10px; padding: 8px 0;
-    }
-    .task-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .td-done { background: #22c55e; }
-    .td-active { background: #171717; }
-    .td-upcoming { background: #d4d4d4; }
-    .td-recurring { background: #a3a3a3; }
-    .task-name { font-size: 13px; flex: 1; }
-    .task-name.active { font-weight: 600; }
-    .task-name.done { color: #a3a3a3; text-decoration: line-through; }
-    .task-priority {
-      font-size: 10px; letter-spacing: 0.06em;
-      text-transform: uppercase; margin-right: 8px;
-    }
-    .task-priority.high { color: #171717; font-weight: 600; }
-    .task-priority.medium { color: #a3a3a3; font-weight: 400; }
-    .task-due {
-      font-size: 11px; color: #a3a3a3;
-      font-variant-numeric: tabular-nums;
-      min-width: 56px; text-align: right;
-    }
-
-    /* ── Needs ── */
-    .needs-table {
-      border: 2px solid #171717;
-    }
-    .needs-header, .needs-row {
-      display: grid; grid-template-columns: 1fr 110px 100px;
-      padding: 12px 20px;
-    }
-    .needs-header {
-      background: #171717; color: #fafaf9;
-      font-size: 10px; font-weight: 600;
-      letter-spacing: 0.1em; text-transform: uppercase;
-    }
-    .needs-row {
-      font-size: 13px; border-bottom: 1px solid #f0f0f0;
-    }
-    .needs-row:last-child { border-bottom: none; }
-    .needs-row .when { font-size: 12px; color: #737373; }
-    .needs-row .when.urgent { color: #171717; font-weight: 600; }
-    .needs-row .owner { font-size: 12px; color: #737373; }
-
-    /* ── Footer ── */
-    .footer {
-      border-top: 2px solid #171717; padding-top: 24px;
-      margin-top: 16px;
-      display: flex; justify-content: space-between;
-      align-items: center;
-    }
-    .footer-text { font-size: 11px; color: #a3a3a3; }
-    .footer-brand {
-      display: flex; align-items: center; gap: 10px;
-      font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
-      text-transform: uppercase; color: #a3a3a3;
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 700px) {
-      .header { padding: 28px 24px 24px; }
-      .header h1 { font-size: 32px; }
-      .week-display { font-size: 40px; }
-      .content { padding: 0 24px 48px; }
-      .phases { grid-template-columns: 1fr; }
-      .phase { border-right: none; border-bottom: 1px solid #e5e5e5; }
-      .phase:last-child { border-bottom: none; }
-      .phase-weeks { font-size: 24px; }
-      .needs-header, .needs-row {
-        grid-template-columns: 1fr 90px 80px;
-        padding: 10px 14px;
-      }
-    }
   </style>
 </head>
 <body>
 
-  <!-- ════ GATE ════ -->
-  <div id="gate" class="gate">
+  <div class="gate">
     <div class="gate-inner">
       <svg width="48" height="48" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.8911 27.6641V5.90942H16.1623C23.8885 5.90942 28.7364 10.1513 28.7364 16.7867C28.7364 23.4222 23.8885 27.6641 16.1623 27.6641H4.8911ZM9.86013 23.3919H16.1623C20.8889 23.3919 23.6461 20.7862 23.6461 16.7867C23.6461 12.7873 20.8889 10.1816 16.132 10.1816H9.86013V23.3919Z" fill="#111"/><path d="M39.7251 5.90942H60.8132V10.2422H44.6941V14.4234H59.0861V18.6956H44.6941V23.3313H60.8132V27.6641H39.7251V5.90942Z" fill="#111"/><path d="M77.617 20.0893V27.6641H72.5571V5.90942H86.2522C91.3728 5.90942 94.7359 8.33334 94.7359 12.9994C94.7359 17.6351 91.3728 20.0893 86.2522 20.0893H77.617ZM77.617 15.8475H85.9795C88.3732 15.8475 89.7366 14.787 89.7366 12.9994C89.7366 11.2117 88.3732 10.1816 85.9795 10.1816H77.617V15.8475Z" fill="#111"/><path d="M13.799 39.2375H19.5255L30.3422 60.9922H24.8581L22.5554 56.3261H10.6176L8.31488 60.9922H2.92167L13.799 39.2375ZM16.6168 44.2066L12.6779 52.1449H20.5254L16.6168 44.2066Z" fill="#111"/><path d="M44.285 53.266V60.9922H39.2251V39.2375H53.0717C58.1316 39.2375 61.5251 41.6918 61.5251 46.2366C61.5251 49.5089 59.6769 51.7813 56.6167 52.7509L62.0402 60.9922H56.2531L51.3144 53.266H44.285ZM44.285 49.1453H52.799C55.1926 49.1453 56.5561 48.0848 56.5561 46.3275C56.5561 44.5399 55.1926 43.5097 52.799 43.5097H44.285V49.1453Z" fill="#111"/><path d="M95.2813 43.5703H85.8584V60.9922H80.7984V43.5703H71.3452V39.2375H95.2813V43.5703Z" fill="#111"/><path d="M16.2078 94.6556C8.63309 94.6556 4.87602 90.5955 4.87602 84.2933V72.5676H9.93594V83.8994C9.93594 87.7474 11.7236 90.2319 16.2078 90.2319C20.6921 90.2319 22.4494 87.7474 22.4494 83.8994V72.5676H27.5093V84.2933C27.5093 90.5955 23.7523 94.6556 16.2078 94.6556Z" fill="#111"/><path d="M44.285 86.596V94.3223H39.2251V72.5676H53.0717C58.1316 72.5676 61.5251 75.0218 61.5251 79.5667C61.5251 82.839 59.6769 85.1114 56.6167 86.081L62.0402 94.3223H56.2531L51.3144 86.596H44.285ZM44.285 82.4754H52.799C55.1926 82.4754 56.5561 81.4149 56.5561 79.6576C56.5561 77.8699 55.1926 76.8398 52.799 76.8398H44.285V82.4754Z" fill="#111"/><path d="M73.0571 72.5676H94.1452V76.9004H78.0261V81.0816H92.4181V85.3538H78.0261V89.9895H94.1452V94.3223H73.0571V72.5676Z" fill="#111"/></svg>
       <div class="gate-label">Client Dashboard</div>
@@ -291,289 +57,36 @@
     </div>
   </div>
 
-  <!-- ════ DASHBOARD ════ -->
-  <div id="dashboard" class="dashboard">
-    <header class="header">
-      <div class="header-top">
-        <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.8911 27.6641V5.90942H16.1623C23.8885 5.90942 28.7364 10.1513 28.7364 16.7867C28.7364 23.4222 23.8885 27.6641 16.1623 27.6641H4.8911ZM9.86013 23.3919H16.1623C20.8889 23.3919 23.6461 20.7862 23.6461 16.7867C23.6461 12.7873 20.8889 10.1816 16.132 10.1816H9.86013V23.3919Z" fill="#111"/><path d="M39.7251 5.90942H60.8132V10.2422H44.6941V14.4234H59.0861V18.6956H44.6941V23.3313H60.8132V27.6641H39.7251V5.90942Z" fill="#111"/><path d="M77.617 20.0893V27.6641H72.5571V5.90942H86.2522C91.3728 5.90942 94.7359 8.33334 94.7359 12.9994C94.7359 17.6351 91.3728 20.0893 86.2522 20.0893H77.617ZM77.617 15.8475H85.9795C88.3732 15.8475 89.7366 14.787 89.7366 12.9994C89.7366 11.2117 88.3732 10.1816 85.9795 10.1816H77.617V15.8475Z" fill="#111"/><path d="M13.799 39.2375H19.5255L30.3422 60.9922H24.8581L22.5554 56.3261H10.6176L8.31488 60.9922H2.92167L13.799 39.2375ZM16.6168 44.2066L12.6779 52.1449H20.5254L16.6168 44.2066Z" fill="#111"/><path d="M44.285 53.266V60.9922H39.2251V39.2375H53.0717C58.1316 39.2375 61.5251 41.6918 61.5251 46.2366C61.5251 49.5089 59.6769 51.7813 56.6167 52.7509L62.0402 60.9922H56.2531L51.3144 53.266H44.285ZM44.285 49.1453H52.799C55.1926 49.1453 56.5561 48.0848 56.5561 46.3275C56.5561 44.5399 55.1926 43.5097 52.799 43.5097H44.285V49.1453Z" fill="#111"/><path d="M95.2813 43.5703H85.8584V60.9922H80.7984V43.5703H71.3452V39.2375H95.2813V43.5703Z" fill="#111"/><path d="M16.2078 94.6556C8.63309 94.6556 4.87602 90.5955 4.87602 84.2933V72.5676H9.93594V83.8994C9.93594 87.7474 11.7236 90.2319 16.2078 90.2319C20.6921 90.2319 22.4494 87.7474 22.4494 83.8994V72.5676H27.5093V84.2933C27.5093 90.5955 23.7523 94.6556 16.2078 94.6556Z" fill="#111"/><path d="M44.285 86.596V94.3223H39.2251V72.5676H53.0717C58.1316 72.5676 61.5251 75.0218 61.5251 79.5667C61.5251 82.839 59.6769 85.1114 56.6167 86.081L62.0402 94.3223H56.2531L51.3144 86.596H44.285ZM44.285 82.4754H52.799C55.1926 82.4754 56.5561 81.4149 56.5561 79.6576C56.5561 77.8699 55.1926 76.8398 52.799 76.8398H44.285V82.4754Z" fill="#111"/><path d="M73.0571 72.5676H94.1452V76.9004H78.0261V81.0816H92.4181V85.3538H78.0261V89.9895H94.1452V94.3223H73.0571V72.5676Z" fill="#111"/></svg>
-        <div class="header-right">
-          <div class="week-display" id="week-num"></div>
-          <div class="week-sub" id="week-sub"></div>
-        </div>
-      </div>
-      <div class="micro" style="margin-bottom: 8px;">Client Dashboard</div>
-      <h1 id="client-name"></h1>
-      <div class="header-meta" id="engagement-meta"></div>
-    </header>
-
-    <div class="content">
-      <!-- Progress -->
-      <div class="section">
-        <div class="progress-row">
-          <span class="micro">Engagement Progress</span>
-          <span class="micro" id="date-range"></span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill" id="progress-fill"></div>
-          <div class="progress-marker" id="progress-marker"></div>
-        </div>
-      </div>
-
-      <!-- Phases -->
-      <div class="section">
-        <div class="section-label">Project Phases</div>
-        <div class="phases" id="phases"></div>
-      </div>
-
-      <!-- Milestones -->
-      <div class="section">
-        <div class="section-label">Key Milestones</div>
-        <div id="milestones"></div>
-      </div>
-
-      <!-- Tasks -->
-      <div class="section">
-        <div class="tabs-header">
-          <div class="section-label" style="margin-bottom: 0; border: none; padding: 0;">Tasks</div>
-          <div class="tabs" id="task-tabs"></div>
-        </div>
-        <div id="tasks-container"></div>
-      </div>
-
-      <!-- Needs -->
-      <div class="section" id="needs-section">
-        <div class="section-label">Needs from SunStrong</div>
-        <div class="needs-table" id="needs-table"></div>
-      </div>
-
-      <!-- Footer -->
-      <div class="footer">
-        <span class="footer-text">Confidential — prepared for SunStrong Management</span>
-        <div class="footer-brand">
-          <span>Departure</span>
-          <svg width="20" height="20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.8911 27.6641V5.90942H16.1623C23.8885 5.90942 28.7364 10.1513 28.7364 16.7867C28.7364 23.4222 23.8885 27.6641 16.1623 27.6641H4.8911ZM9.86013 23.3919H16.1623C20.8889 23.3919 23.6461 20.7862 23.6461 16.7867C23.6461 12.7873 20.8889 10.1816 16.132 10.1816H9.86013V23.3919Z" fill="#a3a3a3"/><path d="M39.7251 5.90942H60.8132V10.2422H44.6941V14.4234H59.0861V18.6956H44.6941V23.3313H60.8132V27.6641H39.7251V5.90942Z" fill="#a3a3a3"/><path d="M77.617 20.0893V27.6641H72.5571V5.90942H86.2522C91.3728 5.90942 94.7359 8.33334 94.7359 12.9994C94.7359 17.6351 91.3728 20.0893 86.2522 20.0893H77.617ZM77.617 15.8475H85.9795C88.3732 15.8475 89.7366 14.787 89.7366 12.9994C89.7366 11.2117 88.3732 10.1816 85.9795 10.1816H77.617V15.8475Z" fill="#a3a3a3"/><path d="M13.799 39.2375H19.5255L30.3422 60.9922H24.8581L22.5554 56.3261H10.6176L8.31488 60.9922H2.92167L13.799 39.2375ZM16.6168 44.2066L12.6779 52.1449H20.5254L16.6168 44.2066Z" fill="#a3a3a3"/><path d="M44.285 53.266V60.9922H39.2251V39.2375H53.0717C58.1316 39.2375 61.5251 41.6918 61.5251 46.2366C61.5251 49.5089 59.6769 51.7813 56.6167 52.7509L62.0402 60.9922H56.2531L51.3144 53.266H44.285ZM44.285 49.1453H52.799C55.1926 49.1453 56.5561 48.0848 56.5561 46.3275C56.5561 44.5399 55.1926 43.5097 52.799 43.5097H44.285V49.1453Z" fill="#a3a3a3"/><path d="M95.2813 43.5703H85.8584V60.9922H80.7984V43.5703H71.3452V39.2375H95.2813V43.5703Z" fill="#a3a3a3"/><path d="M16.2078 94.6556C8.63309 94.6556 4.87602 90.5955 4.87602 84.2933V72.5676H9.93594V83.8994C9.93594 87.7474 11.7236 90.2319 16.2078 90.2319C20.6921 90.2319 22.4494 87.7474 22.4494 83.8994V72.5676H27.5093V84.2933C27.5093 90.5955 23.7523 94.6556 16.2078 94.6556Z" fill="#a3a3a3"/><path d="M44.285 86.596V94.3223H39.2251V72.5676H53.0717C58.1316 72.5676 61.5251 75.0218 61.5251 79.5667C61.5251 82.839 59.6769 85.1114 56.6167 86.081L62.0402 94.3223H56.2531L51.3144 86.596H44.285ZM44.285 82.4754H52.799C55.1926 82.4754 56.5561 81.4149 56.5561 79.6576C56.5561 77.8699 55.1926 76.8398 52.799 76.8398H44.285V82.4754Z" fill="#a3a3a3"/><path d="M73.0571 72.5676H94.1452V76.9004H78.0261V81.0816H92.4181V85.3538H78.0261V89.9895H94.1452V94.3223H73.0571V72.5676Z" fill="#a3a3a3"/></svg>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <script>
-  // ══════════════════════════════════════════
-  // CONFIG
-  // ══════════════════════════════════════════
-
-  var PASSWORD_HASH = "3867da6e50ffd505c7272e6f450c988f7e227a2b22fa8a156040e51cb709ab3a";
-
-  var E = {
-    client: "SunStrong Management",
-    lead: "Ben Fogarty",
-    type: "Fractional Design Leadership",
-    startDate: "2026-03-13",
-    endDate: "2026-06-15",
-    lastUpdated: "2026-03-17",
-    totalWeeks: 12,
-    dateRange: "Mar 13 – Jun 15, 2026",
-  };
-
-  var PHASES = [
-    { weeks: "1–3", label: "Discovery & Audit", dates: "Mar 13 – Apr 3", status: "active", desc: "Brand audit, agency alignment, site strategy, content planning" },
-    { weeks: "4–8", label: "Design & Development", dates: "Apr 6 – May 22", status: "upcoming", desc: "Creative direction, page design, build, QA, and launch" },
-    { weeks: "9–12", label: "Iteration & Extension", dates: "May 25 – Jun 15", status: "upcoming", desc: "Live feedback, refinements, and extended deliverables" },
+  var CLIENTS = [
+    {
+      hash: "3867da6e50ffd505c7272e6f450c988f7e227a2b22fa8a156040e51cb709ab3a",
+      path: "sunstrong/"
+    }
   ];
 
-  var MILESTONES = [
-    { label: "Engagement start", date: "Mar 13", s: "done" },
-    { label: "Kickoff meeting", date: "Mar 16", s: "done" },
-    { label: "Brand audit complete", date: "Mar 27", s: "active" },
-    { label: "Site strategy locked", date: "Apr 1", s: "upcoming" },
-    { label: "Creative direction approved", date: "Apr 13", s: "upcoming" },
-    { label: "Homepage design approved", date: "Apr 20", s: "upcoming" },
-    { label: "Launch 1 — site live", date: "May 22", s: "upcoming" },
-    { label: "Launch 2 — iteration complete", date: "Jun 15", s: "upcoming" },
-  ];
-
-  var TASKS = {
-    website: {
-      label: "Website Project",
-      sections: [
-        { label: "Discovery & Audit · Wks 1–3", tasks: [
-          { n: "Brand audit", d: "Mar 27", s: "ip" },
-          { n: "Review existing agency work", d: "Mar 23", s: "ip" },
-          { n: "Site strategy and content planning", d: "Apr 1", s: "ns" },
-          { n: "Site architecture / sitemap", d: "Apr 3", s: "ns" },
-          { n: "Gather content and assets from client", d: "Apr 3", s: "ns" },
-        ]},
-        { label: "Design & Development · Wks 4–8", tasks: [
-          { n: "Creative direction / territories", d: "Apr 13", s: "ns" },
-          { n: "Homepage design", d: "Apr 20", s: "ns" },
-          { n: "Inner page designs", d: "Apr 29", s: "ns" },
-          { n: "Platform setup and CMS architecture", d: "May 1", s: "ns" },
-          { n: "Build — homepage and global components", d: "May 8", s: "ns" },
-          { n: "Build — inner pages and CMS templates", d: "May 15", s: "ns" },
-          { n: "QA, responsive testing, and polish", d: "May 18", s: "ns" },
-          { n: "Launch 1 — live site", d: "May 22", s: "ns" },
-        ]},
-        { label: "Iteration & Extension · Wks 9–12", tasks: [
-          { n: "Collect live site feedback", d: "May 29", s: "ns" },
-          { n: "Website refinements and iteration", d: "Jun 12", s: "ns" },
-          { n: "Launch 2 — iteration complete", d: "Jun 15", s: "ns" },
-        ]},
-      ],
-    },
-    retainer: {
-      label: "Retainer",
-      tasks: [
-        { n: "Kickoff and onboarding", d: "Mar 18", p: "High", s: "done" },
-        { n: "Collect all existing brand assets and agency work", d: "Mar 20", p: "High", s: "ip" },
-        { n: "Establish coordination with identity agency", d: "Mar 20", p: "High", s: "ip" },
-        { n: "Weekly sync — Tuesdays 4pm EST", d: "Ongoing", p: "Medium", s: "rec" },
-        { n: "Identify Month 3 extension priorities", d: "May 1", p: "Medium", s: "ns" },
-      ],
-    },
-  };
-
-  var NEEDS = [
-    { item: "Brand agency brief and supporting docs", urgency: "This week", owner: "Lauren" },
-    { item: "Recommend attendees for stakeholder interviews", urgency: "This week", owner: "Lauren" },
-    { item: "Brand assets and existing materials", urgency: "This week", owner: "Lauren" },
-    { item: "Schedule bi-weekly sprint retro", urgency: "This week", owner: "Ben / Lauren" },
-    { item: "Content: copy, photos, testimonials, bios", urgency: "By Apr 3", owner: "SunStrong" },
-  ];
-
-  // ══════════════════════════════════════════
-  // ENGINE
-  // ══════════════════════════════════════════
-
-  async function hp(pw) {
+  async function hashPassword(pw) {
     var buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(pw));
     return Array.from(new Uint8Array(buf)).map(function(b) { return b.toString(16).padStart(2, "0"); }).join("");
   }
 
-  function dc(s) {
-    return { done:"td-done", ip:"td-active", ns:"td-upcoming", rec:"td-recurring" }[s] || "td-upcoming";
-  }
-  function mc(s) {
-    return { done:"ms-done", active:"ms-active", upcoming:"ms-upcoming" }[s] || "ms-upcoming";
-  }
-  function nc(s) {
-    return { done:"done", ip:"active", ns:"", rec:"" }[s] || "";
-  }
+  var input = document.getElementById("gate-input");
+  var error = document.getElementById("gate-error");
 
-  // Auth
-  var gi = document.getElementById("gate-input");
-  var ge = document.getElementById("gate-error");
-
-  if (sessionStorage.getItem("ds_ss") === "1") {
-    document.getElementById("gate").style.display = "none";
-    document.getElementById("dashboard").classList.add("visible");
-  }
-
-  gi.addEventListener("keydown", async function(e) {
+  input.addEventListener("keydown", async function(e) {
     if (e.key === "Enter") {
-      var h = await hp(gi.value);
-      if (h === PASSWORD_HASH) {
-        sessionStorage.setItem("ds_ss", "1");
-        document.getElementById("gate").style.display = "none";
-        document.getElementById("dashboard").classList.add("visible");
-      } else {
-        ge.textContent = "Incorrect password";
-        gi.value = "";
-        gi.focus();
+      var h = await hashPassword(input.value);
+      for (var i = 0; i < CLIENTS.length; i++) {
+        if (h === CLIENTS[i].hash) {
+          window.location.href = CLIENTS[i].path;
+          return;
+        }
       }
+      error.textContent = "Incorrect password";
+      input.value = "";
+      input.focus();
     }
   });
-
-  // Render
-  (function() {
-    var start = new Date(E.startDate), end = new Date(E.endDate), now = new Date();
-    var week = Math.max(1, Math.min(Math.ceil(((now - start) / 864e5 + 1) / 7), E.totalWeeks));
-    var pct = Math.min(Math.max(((now - start) / (end - start)) * 100, 0), 100);
-
-    document.getElementById("week-num").textContent = "0" + week;
-    document.getElementById("week-sub").textContent = "of " + E.totalWeeks + " weeks · Updated " + E.lastUpdated;
-    document.getElementById("client-name").textContent = E.client;
-    document.getElementById("engagement-meta").textContent = E.type + " · " + E.lead;
-    document.getElementById("date-range").textContent = E.dateRange;
-    document.getElementById("progress-fill").style.width = pct + "%";
-    document.getElementById("progress-marker").style.left = pct + "%";
-
-    // Phases
-    document.getElementById("phases").innerHTML = PHASES.map(function(p) {
-      return '<div class="phase ' + (p.status === "active" ? "active" : "") + '">' +
-        '<div class="phase-weeks">' + p.weeks + '</div>' +
-        '<div class="phase-name">' + p.label + '</div>' +
-        '<div class="phase-dates">' + p.dates + '</div>' +
-        '<div class="phase-desc">' + p.desc + '</div>' +
-        (p.status === "active" ? '<div class="phase-active-bar"></div>' : '') +
-        '</div>';
-    }).join("");
-
-    // Milestones
-    document.getElementById("milestones").innerHTML = MILESTONES.map(function(m) {
-      return '<div class="ms-row">' +
-        '<span class="ms-marker ' + mc(m.s) + '"></span>' +
-        '<span class="ms-label ' + m.s + '">' + m.label + '</span>' +
-        '<span class="ms-date">' + m.date + '</span></div>';
-    }).join("");
-
-    // Tasks
-    var tabs = document.getElementById("task-tabs");
-    var cont = document.getElementById("tasks-container");
-    var keys = Object.keys(TASKS);
-
-    keys.forEach(function(key, idx) {
-      var g = TASKS[key];
-      var btn = document.createElement("button");
-      btn.className = "tab-btn" + (idx === 0 ? " active" : "");
-      btn.dataset.tab = key;
-      btn.textContent = g.label;
-      tabs.appendChild(btn);
-
-      var panel = document.createElement("div");
-      panel.id = "tp-" + key;
-      panel.style.display = idx === 0 ? "block" : "none";
-
-      if (g.sections) {
-        g.sections.forEach(function(sec) {
-          var h = '<div class="task-group"><div class="task-group-label">' + sec.label + '</div>';
-          sec.tasks.forEach(function(t) {
-            h += '<div class="task-row"><span class="task-dot ' + dc(t.s) + '"></span>' +
-              '<span class="task-name ' + nc(t.s) + '">' + t.n + '</span>' +
-              '<span class="task-due">' + t.d + '</span></div>';
-          });
-          h += '</div>';
-          panel.innerHTML += h;
-        });
-      } else {
-        g.tasks.forEach(function(t) {
-          panel.innerHTML += '<div class="task-row"><span class="task-dot ' + dc(t.s) + '"></span>' +
-            '<span class="task-name ' + nc(t.s) + '">' + t.n + '</span>' +
-            (t.p ? '<span class="task-priority ' + t.p.toLowerCase() + '">' + t.p + '</span>' : '') +
-            '<span class="task-due">' + t.d + '</span></div>';
-        });
-      }
-      cont.appendChild(panel);
-    });
-
-    tabs.querySelectorAll(".tab-btn").forEach(function(btn) {
-      btn.addEventListener("click", function() {
-        tabs.querySelectorAll(".tab-btn").forEach(function(b) { b.classList.remove("active"); });
-        btn.classList.add("active");
-        keys.forEach(function(k) {
-          document.getElementById("tp-" + k).style.display = k === btn.dataset.tab ? "block" : "none";
-        });
-      });
-    });
-
-    // Needs
-    var nh = '<div class="needs-header"><span>Item</span><span>When</span><span>Owner</span></div>';
-    NEEDS.forEach(function(n) {
-      nh += '<div class="needs-row"><span>' + n.item + '</span>' +
-        '<span class="when ' + (n.urgency === "Now" ? "urgent" : "") + '">' + n.urgency + '</span>' +
-        '<span class="owner">' + n.owner + '</span></div>';
-    });
-    document.getElementById("needs-table").innerHTML = nh;
-  })();
   </script>
 
 </body>

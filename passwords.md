@@ -5,8 +5,8 @@
 ## How Passwords Work
 
 Each client has a unique password that serves two purposes:
-1. At the root login (`/`), the password routes to the correct client dashboard
-2. At the client URL (`/sunstrong/`), the password unlocks the dashboard directly
+1. At the login page (`departure.is/dashboard/`), the password routes to the correct client dashboard
+2. At the client URL (`departure.is/dashboard/sunstrong/`), the password unlocks the dashboard directly
 
 Passwords are stored as SHA-256 hashes in the source. To generate a new hash:
 
@@ -20,17 +20,17 @@ crypto.subtle.digest('SHA-256', new TextEncoder().encode('yourpassword'))
 
 ## Active Clients
 
-| Client              | Path          | Password     | Hash                                                               | Added      |
+| Client              | URL          | Password     | Hash                                                               | Added      |
 |---------------------|---------------|--------------|--------------------------------------------------------------------|------------|
-| SunStrong Management | `/sunstrong/` | `deptxsunstrong26`  | `3867da6e50ffd505c7272e6f450c988f7e227a2b22fa8a156040e51cb709ab3a` | 2026-03-16 |
+| SunStrong Management | `departure.is/dashboard/sunstrong/` | `deptxsunstrong26`  | `3867da6e50ffd505c7272e6f450c988f7e227a2b22fa8a156040e51cb709ab3a` | 2026-03-16 |
 
 ---
 
 ## Adding a New Client
 
 1. Generate a password hash (see above)
-2. Duplicate `public/sunstrong/` → `public/new-client/`
-3. In the new `index.html`: update `PASSWORD_HASH`, `CLIENT_DATA`, and the `sessionKey` in `initGate()`
+2. Duplicate `public/sunstrong/` -> `public/new-client/`
+3. In the new `index.html`: update `PASSWORD_HASH`, data variables, and the `sessionKey`
 4. In `public/index.html`: add entry to the `CLIENTS` array
 5. Add a row to this file
 6. Push and deploy

@@ -4,31 +4,51 @@ A password-protected, multi-client project dashboard system.
 
 **By [Departure Studio](https://departurestudio.com)**
 
+Live at `departure.is/dashboard/`
+
 ## How It Works
 
-One deploy, multiple clients. Each client gets their own password and dashboard. A universal login page at the root URL routes to the correct client based on their password.
+One deploy, multiple clients. Each client gets their own password and dashboard. A universal login page at `/dashboard/` routes to the correct client based on their password.
 
 ```
 public/
-├── index.html              ← Universal login (routes by password)
+├── index.html              <- Universal login (routes by password)
 ├── shared/
-│   ├── styles.css          ← Design system (Inter Tight, editorial)
-│   ├── engine.js           ← Rendering engine + auth logic
-│   └── template.html       ← Reference template (not loaded at runtime)
+│   ├── styles.css          <- Design system (Inter Tight, editorial)
+│   ├── engine.js           <- Rendering engine + auth logic
+│   └── template.html       <- Reference template (not loaded at runtime)
 ├── sunstrong/
-│   └── index.html          ← SunStrong dashboard + data
-├── next-client/            ← Future clients go here
+│   └── index.html          <- SunStrong dashboard + data
+├── next-client/            <- Future clients go here
 │   └── index.html
 └── ...
 ```
+
+## Hosting
+
+This project is deployed as its own Vercel project. The `departure.is` site proxies `/dashboard/*` to it via a Vercel rewrite:
+
+```json
+{
+  "rewrites": [
+    {
+      "source": "/dashboard/:path*",
+      "destination": "https://<dashboard-project>.vercel.app/:path*"
+    }
+  ]
+}
+```
+
+| URL | Serves |
+|---|---|
+| `departure.is/dashboard/` | Login router |
+| `departure.is/dashboard/sunstrong/` | SunStrong dashboard |
 
 ## Deploy
 
 1. Push to GitHub
 2. Connect to Vercel
 3. Deploy — no build step, no dependencies
-
-Live at `your-project.vercel.app`.
 
 ## Adding a New Client
 
@@ -45,14 +65,14 @@ Live at `your-project.vercel.app`.
 
 3. **Update the new client's `index.html`:**
    - Replace `PASSWORD_HASH` with the new hash
-   - Replace `CLIENT_DATA` with the client's project data
-   - Update the `sessionKey` in `initGate()` (e.g., `"dash_newclient"`)
+   - Replace the data variables (`E`, `PHASES`, `MILESTONES`, `TASKS`, `NEEDS`) with the client's project data
+   - Update the `sessionKey` in the auth block (e.g., `"ds_newclient"`)
 
 4. **Add to the router** in `public/index.html`:
    ```js
    CLIENTS.push({
      hash: "the-hash-you-generated",
-     path: "/new-client/",
+     path: "new-client/"
    });
    ```
 
@@ -60,7 +80,7 @@ Live at `your-project.vercel.app`.
 
 ## Updating a Client's Dashboard
 
-All project data lives in the `CLIENT_DATA` object in each client's `index.html`. Update the data, push, and the dashboard reflects the changes immediately.
+All project data lives in the variables at the top of each client's `index.html`. Update the data, push, and the dashboard reflects the changes immediately.
 
 The data structure supports:
 - **Engagement details** — client name, dates, lead, type
