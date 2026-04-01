@@ -1,580 +1,986 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SunStrong Management — Project Dashboard</title>
-  <meta name="robots" content="noindex, nofollow" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unrivaled Sports — Homepage</title>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    ::selection { background: #171717; color: #fafaf9; }
+    /* ==========================================================================
+       DESIGN TOKENS
+       ========================================================================== */
+    :root {
+      --color-navy:           #1D2468;
+      --color-red:            #FF0000;
+      --color-red-alt:        #FF0505;
+      --color-blue:           #0162FF;
+      --color-gold:           #A88A3E;
+      --color-gold-overlay:   #C1A556;
+      --color-white:          #FFFFFF;
+      --color-black:          #000000;
+      --color-gray-light:     #F1F1F1;
+      --color-gray-placeholder: #D9D9D9;
 
-    body {
-      font-family: 'Inter Tight', sans-serif;
-      background: #fafaf9;
-      color: #171717;
-      line-height: 1.45;
-      -webkit-font-smoothing: antialiased;
-    }
+      --font-display:         'Review', sans-serif;
+      --font-ui:              'Neue Plak', sans-serif;
+      --font-body:            'Neue Plak Text', sans-serif;
+      --weight-regular:       400;
+      --weight-medium:        500;
+      --weight-semibold:      600;
+      --weight-bold:          700;
+      --weight-poster-heavy:  800;
 
-    /* ── Gate ── */
-    .gate {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px;
-    }
-    .gate-inner { width: 100%; max-width: 320px; text-align: center; }
-    .gate-inner svg { margin-bottom: 32px; }
-    .gate-label {
-      font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
-      text-transform: uppercase; color: #a3a3a3; margin-bottom: 16px;
-    }
-    .gate input[type="password"] {
-      width: 100%; padding: 12px 16px; font-family: 'Inter Tight', sans-serif;
-      font-size: 14px; border: 1px solid #e5e5e5; background: #fff;
-      color: #171717; outline: none; transition: border-color 0.15s ease;
-      letter-spacing: 0.12em;
-    }
-    .gate input:focus { border-color: #171717; }
-    .gate input::placeholder { color: #d4d4d4; letter-spacing: 0.04em; }
-    .gate-error { font-size: 12px; color: #ef4444; margin-top: 10px; height: 18px; }
-    .gate-hint { font-size: 11px; color: #d4d4d4; margin-top: 24px; }
+      --page-max-width:       1440px;
+      --content-max-width:    1320px;
+      --margin-desktop:       40px;
+      --margin-mobile:        20px;
+      --radius:               6px;
 
-    /* ── Dashboard ── */
-    .dashboard { display: none; }
-    .dashboard.visible { display: block; }
+      --transition-fast:      150ms ease;
+      --transition-base:      250ms ease;
+      --ease-out:             cubic-bezier(0.25, 0.1, 0.25, 1);
+      --focus-ring-width:     2px;
+      --focus-ring-color:     var(--color-blue);
+      --focus-ring-offset:    2px;
 
-    /* ── Micro Labels ── */
-    .micro {
-      font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
-      text-transform: uppercase; color: #a3a3a3;
+      --hamburger-bar-color:  var(--color-red-alt);
+      --hamburger-bar-height: 3.4px;
+      --hamburger-bar-width:  40px;
+      --sticky-nav-height:    58px;
     }
 
-    /* ── Header ── */
-    .header {
-      padding: 40px 48px 36px;
-      border-bottom: 2px solid #171717;
-    }
-    .header-top {
-      display: flex; justify-content: space-between;
-      align-items: flex-start; margin-bottom: 32px;
-    }
-    .header h1 {
-      font-size: 48px; font-weight: 700; letter-spacing: -0.035em;
-      line-height: 1.0; margin-top: 8px;
-    }
-    .header-meta {
-      font-size: 13px; color: #737373; margin-top: 10px;
-      font-weight: 400; letter-spacing: 0.01em;
-    }
-    .header-right { text-align: right; }
-    .week-display {
-      font-size: 64px; font-weight: 700; letter-spacing: -0.04em;
-      line-height: 0.85; color: #171717;
-    }
-    .week-sub {
-      font-size: 12px; color: #a3a3a3; margin-top: 8px;
-      font-weight: 400;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); color: var(--color-black); background: var(--color-white); overflow-x: hidden; }
+    body.menu-open { overflow: hidden; }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; }
+
+    /* FIX 26: Responsive show/hide utilities */
+    .hide-mobile { display: none; }
+    .hide-desktop { display: inline; }
+    @media (min-width: 1024px) {
+      .hide-mobile { display: inline; }
+      .hide-desktop { display: none; }
     }
 
-    /* ── Content ── */
-    .content { padding: 0 48px 64px; max-width: 1000px; }
-    .section { padding-top: 48px; }
-    .section-label {
-      font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
-      text-transform: uppercase; color: #a3a3a3;
-      padding-bottom: 12px; border-bottom: 1px solid #e5e5e5;
-      margin-bottom: 24px;
+    /* FIX 3: Hero overlay is optional via modifier */
+    .hero--no-overlay .hero__media::after { display: none; }
+
+
+    /* ==========================================================================
+       01. SITE HEADER
+       ========================================================================== */
+    .site-header { position: absolute; top: 0; left: 0; width: 100%; z-index: 100; }
+    .site-header__inner {
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: var(--page-max-width); margin: 0 auto;
+      padding: 15px var(--margin-mobile); position: relative;
+    }
+    @media (min-width: 768px) { .site-header__inner { padding: 20px 30px; } }
+    @media (min-width: 1024px) { .site-header__inner { padding: 25px var(--margin-desktop); } }
+
+    .site-header__logo-mark {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    }
+    @media (max-width: 767px) { .site-header__logo-mark { display: none; } }
+
+    .site-header__nav { display: none; align-items: center; gap: 24px; }
+    @media (min-width: 1024px) { .site-header__nav { display: flex; } }
+
+    .site-header__nav-link {
+      font-family: var(--font-ui); font-weight: var(--weight-bold);
+      font-size: 14px; line-height: 0.85; letter-spacing: 0.84px;
+      text-transform: uppercase; text-decoration: none; color: var(--color-red);
+      transition: opacity var(--transition-fast);
+      opacity: 0; animation: nav-fade-in 400ms var(--ease-out) forwards;
+    }
+    .site-header__nav-link:nth-child(1) { animation-delay: 200ms; }
+    .site-header__nav-link:nth-child(2) { animation-delay: 300ms; }
+    .site-header__nav-link:nth-child(3) { animation-delay: 400ms; }
+    .site-header__nav-link:nth-child(4) { animation-delay: 500ms; }
+    .site-header__nav-link:nth-child(5) { animation-delay: 600ms; }
+    .site-header__nav-link:hover { opacity: 0.7; }
+    .site-header__nav-link:focus-visible {
+      outline: var(--focus-ring-width) solid var(--color-white);
+      outline-offset: var(--focus-ring-offset); border-radius: 2px;
+    }
+    @keyframes nav-fade-in {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ── Progress ── */
-    .progress-row {
-      display: flex; justify-content: space-between;
-      align-items: baseline; margin-bottom: 12px;
+    /* Wordmark */
+    .wordmark {
+      display: inline-flex; align-items: center; line-height: 0;
+      text-decoration: none; color: inherit; transition: opacity var(--transition-fast);
     }
-    .progress-track {
-      height: 2px; background: #e5e5e5;
-      position: relative;
+    .wordmark:hover { opacity: 0.85; }
+    .wordmark:focus-visible { outline: var(--focus-ring-width) solid currentColor; outline-offset: var(--focus-ring-offset); border-radius: 2px; }
+    .wordmark svg { width: 100%; height: auto; fill: currentColor; }
+    .site-header .wordmark { width: 144px; }
+    @media (min-width: 1024px) { .site-header .wordmark { width: 165px; } }
+
+    /* Logo mark */
+    .logo-mark { display: inline-flex; align-items: center; justify-content: center; line-height: 0; }
+    .logo-mark svg { width: 100%; height: auto; fill: currentColor; }
+    .logo-mark--sm { width: 60px; }
+    @media (min-width: 1024px) { .logo-mark--sm { width: 114px; } }
+
+    /* Hamburger */
+    .hamburger {
+      display: flex; flex-direction: column; justify-content: center; gap: 6px;
+      width: var(--hamburger-bar-width); height: 30px; background: none; border: none; cursor: pointer; padding: 0;
     }
-    .progress-fill {
-      height: 100%; background: #171717;
-      transition: width 0.6s ease;
+    @media (min-width: 1024px) { .hamburger { display: none; } }
+    .hamburger__bar {
+      display: block; width: 100%; height: var(--hamburger-bar-height);
+      background-color: var(--hamburger-bar-color); border-radius: 1px;
     }
-    .progress-marker {
-      position: absolute; top: -4px;
-      width: 10px; height: 10px; border-radius: 50%;
-      background: #171717; border: 2px solid #fafaf9;
-      transform: translateX(-50%);
+    .hamburger:focus-visible { outline: var(--focus-ring-width) solid var(--color-white); outline-offset: var(--focus-ring-offset); border-radius: 2px; }
+
+
+    /* ==========================================================================
+       02. MOBILE MENU
+       ========================================================================== */
+    .mobile-menu__overlay {
+      position: fixed; inset: 0; z-index: 200; background-color: var(--color-red);
+      display: flex; flex-direction: column; padding: 20px var(--margin-mobile);
+      overflow-y: auto; transform: translateX(100%);
+      transition: transform 400ms cubic-bezier(0.42, 0, 0.58, 1);
+    }
+    .mobile-menu[data-open="true"] .mobile-menu__overlay { transform: translateX(0); }
+
+    .mobile-menu__close {
+      position: absolute; top: 20px; right: var(--margin-mobile);
+      width: 40px; height: 40px; background: none; border: none; cursor: pointer; padding: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mobile-menu__close::before, .mobile-menu__close::after {
+      content: ''; position: absolute; width: 32px; height: 3.4px;
+      background-color: var(--color-black); border-radius: 1px;
+    }
+    .mobile-menu__close::before { transform: rotate(45deg); }
+    .mobile-menu__close::after { transform: rotate(-45deg); }
+    .mobile-menu__close:focus-visible { outline: var(--focus-ring-width) solid var(--color-black); outline-offset: var(--focus-ring-offset); border-radius: 2px; }
+
+    .mobile-menu__nav { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 80px 0 40px; }
+    .mobile-menu__nav-item {
+      display: block; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.3);
+      text-decoration: none; font-family: var(--font-display); font-weight: var(--weight-poster-heavy);
+      font-size: 47px; line-height: 1; letter-spacing: 0.93px; text-transform: uppercase;
+      color: var(--color-black); transition: opacity var(--transition-fast);
+    }
+    .mobile-menu__nav-item:last-child { border-bottom: 1px solid rgba(255,255,255,0.3); }
+    .mobile-menu__nav-item:hover { opacity: 0.7; }
+    .mobile-menu__nav-item:focus-visible { outline: var(--focus-ring-width) solid var(--color-black); outline-offset: var(--focus-ring-offset); border-radius: 2px; }
+
+    .mobile-menu[data-open="true"] .mobile-menu__nav-item { animation: menu-item-in 400ms var(--ease-out) both; }
+    .mobile-menu[data-open="true"] .mobile-menu__nav-item:nth-child(1) { animation-delay: 100ms; }
+    .mobile-menu[data-open="true"] .mobile-menu__nav-item:nth-child(2) { animation-delay: 150ms; }
+    .mobile-menu[data-open="true"] .mobile-menu__nav-item:nth-child(3) { animation-delay: 200ms; }
+    .mobile-menu[data-open="true"] .mobile-menu__nav-item:nth-child(4) { animation-delay: 250ms; }
+    .mobile-menu[data-open="true"] .mobile-menu__nav-item:nth-child(5) { animation-delay: 300ms; }
+    @keyframes menu-item-in { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+
+    .mobile-menu__social { display: flex; align-items: center; gap: 20px; padding-bottom: 40px; }
+
+    .social-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; color: var(--color-white); transition: opacity var(--transition-fast); text-decoration: none;
+    }
+    .social-icon svg { width: 100%; height: 100%; fill: currentColor; }
+    .social-icon:hover { opacity: 0.7; }
+    .social-icon:focus-visible { outline: var(--focus-ring-width) solid currentColor; outline-offset: var(--focus-ring-offset); border-radius: 2px; }
+
+
+    /* ==========================================================================
+       03. STICKY MOBILE NAV
+       ========================================================================== */
+    .sticky-mobile-nav {
+      position: fixed; top: 0; left: 0; width: 100%; height: var(--sticky-nav-height);
+      background-color: var(--color-white); z-index: 150; box-shadow: 0 1px 8px rgba(0,0,0,0.08);
+      transform: translateY(-100%); transition: transform 300ms var(--ease-out);
+    }
+    .sticky-mobile-nav[data-visible="true"] { transform: translateY(0); }
+    @media (min-width: 1024px) { .sticky-mobile-nav { display: none; } }
+    .sticky-mobile-nav__inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 100%; padding: 0 var(--margin-mobile);
+    }
+    .sticky-mobile-nav .wordmark { width: 120px; }
+
+
+    /* ==========================================================================
+       06. HERO
+       ========================================================================== */
+    .hero { position: relative; width: 100%; height: 662px; overflow: hidden; background: var(--color-gray-placeholder); }
+    @media (min-width: 768px) { .hero { height: 720px; } }
+    @media (min-width: 1024px) { .hero { height: 809px; } }
+
+    .hero__media { position: absolute; inset: 0; z-index: 1; }
+    .hero__media img { width: 100%; height: 100%; object-fit: cover; }
+    .hero__media::after {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.1) 100%);
     }
 
-    /* ── Phases ── */
-    .phases {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 0; border: 2px solid #171717;
+    .hero__logo-mark {
+      position: absolute; z-index: 2; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 280px; color: var(--color-white); pointer-events: none;
+      opacity: 0; animation: hero-logo-in 600ms var(--ease-out) 300ms forwards;
     }
-    .phase {
-      padding: 28px 24px; position: relative;
-      border-right: 1px solid #e5e5e5;
+    @media (min-width: 1024px) { .hero__logo-mark { width: 380px; } }
+    .hero__logo-mark svg { width: 100%; height: auto; fill: currentColor; }
+    @keyframes hero-logo-in {
+      from { opacity: 0; transform: translate(-50%,-50%) scale(0.95); }
+      to { opacity: 1; transform: translate(-50%,-50%) scale(1); }
     }
-    .phase:last-child { border-right: none; }
-    .phase.active {
-      background: #171717; color: #fafaf9;
-      border-right-color: #171717;
+    .hero .site-header { position: absolute; top: 0; left: 0; width: 100%; z-index: 10; }
+
+
+    /* ==========================================================================
+       07. STICKY HEADLINE
+       ========================================================================== */
+    .sticky-headline { position: relative; background: var(--color-white); }
+    .sticky-headline__track { height: 600px; position: relative; }
+    @media (min-width: 768px) { .sticky-headline__track { height: 700px; } }
+    @media (min-width: 1024px) { .sticky-headline__track { height: 821px; } }
+
+    .sticky-headline__text {
+      position: sticky; top: 0; padding: 80px 20px 40px;
+      font-family: var(--font-display); font-weight: var(--weight-poster-heavy);
+      font-size: 66px; line-height: 0.84; letter-spacing: 0.66px;
+      text-transform: uppercase; text-align: center; color: var(--color-gold);
+      max-width: 390px; margin: 0 auto;
     }
-    .phase-weeks {
-      font-size: 32px; font-weight: 700;
-      letter-spacing: -0.03em; line-height: 1;
-      margin-bottom: 12px;
+    @media (min-width: 768px) { .sticky-headline__text { font-size: 90px; letter-spacing: 0.9px; max-width: 800px; padding-top: 100px; } }
+    @media (min-width: 1024px) { .sticky-headline__text { font-size: 120px; line-height: 0.85; letter-spacing: 1.2px; max-width: 1204px; padding: 170px 40px 40px; } }
+
+
+    /* ==========================================================================
+       08. STAT BADGES
+       ========================================================================== */
+    .stat-badges { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 20px 20px 60px; }
+    @media (min-width: 768px) { .stat-badges { gap: 24px; padding: 30px 40px 80px; } }
+    @media (min-width: 1024px) { .stat-badges { gap: 32px; padding: 40px 40px 120px; } }
+
+    .stat-badge__shape {
+      position: relative; width: 100px; height: 106px;
+      clip-path: polygon(0 0, 100% 0, 100% 72%, 50% 100%, 0 72%); overflow: hidden;
     }
-    .phase.active .phase-weeks { color: #fafaf9; }
-    .phase-name {
-      font-size: 14px; font-weight: 600;
-      letter-spacing: -0.01em; margin-bottom: 8px;
+    @media (min-width: 768px) { .stat-badge__shape { width: 160px; height: 170px; } }
+    @media (min-width: 1024px) { .stat-badge__shape { width: 224px; height: 238px; } }
+
+    .stat-badge__bg { position: absolute; inset: 0; background-color: var(--color-navy); overflow: hidden; }
+    .stat-badge__bg-image {
+      position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.4;
     }
-    .phase-dates {
-      font-size: 11px; color: #a3a3a3; margin-bottom: 8px;
+    .stat-badge__bg::before {
+      content: ''; position: absolute; inset: -50%; z-index: 1;
+      background: repeating-linear-gradient(-15deg, transparent, transparent 3px, var(--color-red) 3px, var(--color-red) 5px); opacity: 0.7;
     }
-    .phase-desc {
-      font-size: 11px; color: #737373; line-height: 1.5;
+    .stat-badge__bg::after { content: ''; position: absolute; inset: 0; z-index: 2; background: linear-gradient(to bottom, rgba(29,36,104,0.4), rgba(29,36,104,0.7)); }
+
+    .stat-badge__content {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; z-index: 1; padding-bottom: 14%;
     }
-    .phase.active .phase-desc { color: #a3a3a3; }
-    .phase-active-bar {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      height: 3px; background: #22c55e;
+    .stat-badge__number {
+      font-family: var(--font-display); font-weight: var(--weight-poster-heavy);
+      font-size: 48px; line-height: 0.84; letter-spacing: 1px; text-transform: uppercase; color: var(--color-white);
+    }
+    @media (min-width: 768px) { .stat-badge__number { font-size: 78px; } }
+    @media (min-width: 1024px) { .stat-badge__number { font-size: 110px; letter-spacing: 1.1px; } }
+
+    .stat-badge__label {
+      font-family: var(--font-display); font-weight: var(--weight-bold);
+      font-size: 7px; line-height: 0.96; letter-spacing: 0.3px; text-transform: uppercase;
+      color: var(--color-white); text-align: center; margin-top: 2px;
+    }
+    @media (min-width: 768px) { .stat-badge__label { font-size: 12px; margin-top: 4px; } }
+    @media (min-width: 1024px) { .stat-badge__label { font-size: 17px; letter-spacing: 0.51px; margin-top: 6px; } }
+
+    /* Scroll animation */
+    .stat-badges[data-animate] .stat-badge { opacity: 0; transform: scale(0.8); transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out); }
+    .stat-badges[data-animate] .stat-badge:nth-child(1) { transition-delay: 0ms; }
+    .stat-badges[data-animate] .stat-badge:nth-child(2) { transition-delay: 200ms; }
+    .stat-badges[data-animate] .stat-badge:nth-child(3) { transition-delay: 400ms; }
+    .stat-badges[data-animate].is-visible .stat-badge { opacity: 1; transform: scale(1); }
+
+
+    /* ==========================================================================
+       09. INFINITE CAROUSEL
+       ========================================================================== */
+    .carousel { width: 100%; overflow: hidden; position: relative; }
+    .carousel__track {
+      display: flex; gap: 20px; width: max-content;
+      animation: carousel-scroll var(--carousel-speed, 30s) linear infinite;
+    }
+    @media (hover: hover) { .carousel:hover .carousel__track { animation-play-state: paused; } }
+    .carousel[data-speed="25"] .carousel__track { animation-duration: 25s; }
+    .carousel[data-speed="30"] .carousel__track { animation-duration: 30s; }
+    .carousel[data-speed="40"] .carousel__track { animation-duration: 40s; }
+    @keyframes carousel-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-50% - 10px)); } }
+
+    /* Events variant */
+    .carousel[data-variant="events"] { padding: 0; }
+    .carousel[data-variant="events"] .carousel__track { align-items: flex-start; }
+    .carousel[data-variant="events"] .carousel__slide { flex: 0 0 auto; display: flex; flex-direction: column; }
+    .carousel__slide-image { border-radius: var(--radius); overflow: hidden; }
+    .carousel__slide-image img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .carousel__slide-image--narrow { width: 200px; height: 240px; }
+    .carousel__slide-image--medium { width: 300px; height: 240px; }
+    .carousel__slide-image--wide { width: 360px; height: 240px; }
+    @media (min-width: 1024px) {
+      .carousel__slide-image--narrow { width: 254px; height: 306px; }
+      .carousel__slide-image--medium { width: 380px; height: 306px; }
+      .carousel__slide-image--wide { width: 459px; height: 306px; }
+    }
+    .carousel__slide-venue {
+      font-family: var(--font-display); font-weight: var(--weight-bold);
+      font-size: 10px; line-height: 19.7px; letter-spacing: 0.4px; text-transform: uppercase; margin: 8px 0 0;
+    }
+    .carousel__slide-desc {
+      font-family: var(--font-body); font-weight: var(--weight-regular);
+      font-size: 12px; line-height: 14px; letter-spacing: 0.24px; margin: 0;
     }
 
-    /* ── Milestones ── */
-    .ms-row {
-      display: flex; align-items: baseline;
-      padding: 9px 0; border-bottom: 1px solid #f0f0f0;
+    /* Instagram variant */
+    .carousel[data-variant="instagram"] { padding: 20px 0; }
+    .carousel[data-variant="instagram"] .carousel__slide { flex: 0 0 auto; }
+    .carousel__slide-link {
+      display: block; border-radius: var(--radius); overflow: hidden; transition: opacity var(--transition-fast);
     }
-    .ms-row:last-child { border-bottom: none; }
-    .ms-marker {
-      width: 8px; height: 8px; border-radius: 50%;
-      flex-shrink: 0; margin-right: 14px; margin-top: 3px;
+    .carousel__slide-link:hover { opacity: 0.85; }
+    .carousel__slide-link img { display: block; object-fit: cover; width: 220px; height: 270px; }
+    @media (min-width: 1024px) { .carousel__slide-link img { width: 271px; height: 338px; } }
+
+
+    /* ==========================================================================
+       10–11. BRANDS SECTION
+       ========================================================================== */
+    .section-header { margin-bottom: 32px; }
+    @media (min-width: 1024px) { .section-header { margin-bottom: 40px; } }
+    .section-header__label {
+      font-family: var(--font-ui); font-weight: var(--weight-bold);
+      font-size: 12px; line-height: 15px; letter-spacing: 1.2px; text-transform: uppercase; margin: 0 0 8px;
     }
-    .ms-done { background: #22c55e; }
-    .ms-active { background: #171717; }
-    .ms-upcoming { background: #d4d4d4; }
-    .ms-label {
-      font-size: 14px; flex: 1; font-weight: 400;
+    @media (min-width: 1024px) { .section-header__label { font-size: 18px; line-height: 20px; letter-spacing: 1.8px; } }
+    .section-header__headline {
+      font-family: var(--font-display); font-weight: var(--weight-bold);
+      font-size: 22px; line-height: 1.11; letter-spacing: 0.44px; margin: 0 0 16px;
     }
-    .ms-label.done { color: #a3a3a3; text-decoration: line-through; }
-    .ms-label.active { font-weight: 600; }
-    .ms-date {
-      font-size: 12px; color: #a3a3a3;
-      font-variant-numeric: tabular-nums;
-      min-width: 64px; text-align: right;
+    @media (min-width: 1024px) { .section-header__headline { font-size: 32px; line-height: 1.26; letter-spacing: 0.64px; } }
+    .section-header__desc {
+      font-family: var(--font-body); font-weight: var(--weight-regular);
+      font-size: 13px; line-height: 18px; margin: 0 0 24px; max-width: 887px;
+    }
+    @media (min-width: 1024px) { .section-header__desc { font-size: 24px; line-height: 30px; } }
+
+    .section-header[data-variant="light"] .section-header__label { color: var(--color-blue); }
+    .section-header[data-variant="light"] .section-header__headline { color: var(--color-black); }
+    .section-header[data-variant="dark"] .section-header__label,
+    .section-header[data-variant="dark"] .section-header__headline,
+    .section-header[data-variant="dark"] .section-header__desc { color: var(--color-white); }
+
+    .brand-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    @media (min-width: 768px) { .brand-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+    @media (min-width: 1024px) { .brand-grid { grid-template-columns: repeat(4, 1fr); gap: 28px; } }
+
+    .brand-grid[data-animate] .brand-card { opacity: 0; transform: translateY(20px); transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out); }
+    .brand-grid[data-animate].is-visible .brand-card { opacity: 1; transform: translateY(0); }
+    .brand-grid[data-animate].is-visible .brand-card:nth-child(1) { transition-delay: 0ms; }
+    .brand-grid[data-animate].is-visible .brand-card:nth-child(2) { transition-delay: 80ms; }
+    .brand-grid[data-animate].is-visible .brand-card:nth-child(3) { transition-delay: 160ms; }
+    .brand-grid[data-animate].is-visible .brand-card:nth-child(4) { transition-delay: 240ms; }
+    .brand-grid[data-animate].is-visible .brand-card:nth-child(5) { transition-delay: 320ms; }
+    .brand-grid[data-animate].is-visible .brand-card:nth-child(6) { transition-delay: 400ms; }
+    .brand-grid[data-animate].is-visible .brand-card:nth-child(7) { transition-delay: 480ms; }
+    .brand-grid[data-animate].is-visible .brand-card:nth-child(8) { transition-delay: 560ms; }
+
+    .brand-card { display: flex; flex-direction: column; }
+    .brand-card__image {
+      position: relative; width: 100%; aspect-ratio: 321/252; background: var(--color-white);
+      border-radius: var(--radius); overflow: hidden; display: flex; align-items: center; justify-content: center;
+      transition: transform var(--transition-base), box-shadow var(--transition-base);
+    }
+    .brand-card__image img { max-width: 75%; max-height: 70%; object-fit: contain; }
+    .brand-card__overlay { position: absolute; inset: 10% 8%; background-color: var(--color-gold-overlay); mix-blend-mode: screen; pointer-events: none; }
+    @media (hover: hover) { .brand-card:hover .brand-card__image { transform: scale(1.02); box-shadow: 0 4px 20px rgba(0,0,0,0.15); } }
+
+    .brand-card__name {
+      font-family: var(--font-display); font-weight: var(--weight-bold);
+      font-size: 10px; line-height: 11.6px; letter-spacing: 0.3px; color: var(--color-white); margin: 10px 0 0;
+    }
+    @media (min-width: 1024px) { .brand-card__name { font-size: 18px; line-height: 21.2px; letter-spacing: 0.54px; margin-top: 14px; } }
+    .brand-card__divider { width: 100%; height: 1px; background: rgba(255,255,255,0.3); margin: 10px 0; }
+    @media (min-width: 1024px) { .brand-card__divider { margin: 12px 0; } }
+
+    .brand-list { margin-top: 24px; }
+    @media (min-width: 768px) { .brand-list { display: none; } }
+    .brand-list-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.2);
+    }
+    .brand-list-item:last-child { border-bottom: 1px solid rgba(255,255,255,0.2); }
+    .brand-list-item__name {
+      font-family: var(--font-display); font-weight: var(--weight-bold);
+      font-size: 11px; line-height: 14px; letter-spacing: 0.44px; color: var(--color-white); margin: 0;
     }
 
-    /* ── Tabs ── */
-    .tabs-header {
-      display: flex; align-items: baseline; gap: 24px;
-      margin-bottom: 24px;
+    .brand-grid__load-more { display: flex; justify-content: center; margin-top: 48px; }
+
+
+    /* ==========================================================================
+       12. PRESS SECTION
+       ========================================================================== */
+    .press-header-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+    .press-header-row .section-header { margin-bottom: 0; }
+    .press-divider { width: 100%; height: 1px; background: rgba(0,0,0,0.1); margin-bottom: 24px; }
+
+    /* Press section has wider left indent on desktop per Figma */
+    .press-section-inner {
+      max-width: var(--content-max-width); margin: 0 auto;
+      padding: 0 var(--margin-mobile);
     }
-    .tabs { display: flex; gap: 0; }
-    .tab-btn {
-      background: none; border: none;
-      border-bottom: 2px solid transparent;
-      padding: 4px 14px 8px; font-size: 12px;
-      font-weight: 400; color: #a3a3a3; cursor: pointer;
-      font-family: 'Inter Tight', sans-serif;
-      letter-spacing: 0.02em; transition: all 0.15s ease;
-    }
-    .tab-btn.active {
-      border-bottom-color: #171717;
-      font-weight: 600; color: #171717;
+    @media (min-width: 1024px) {
+      .press-section-inner { padding: 0 60px 0 60px; }
     }
 
-    /* ── Tasks ── */
-    .task-group { margin-bottom: 28px; }
-    .task-group-label {
-      font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
-      text-transform: uppercase; color: #a3a3a3;
-      margin-bottom: 10px; padding-bottom: 8px;
-      border-bottom: 1px solid #f0f0f0;
+    .press-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
+    @media (min-width: 1024px) { .press-grid { grid-template-columns: repeat(5, 1fr); gap: 20px; } }
+    @media (max-width: 767px) { .press-grid { display: none; } }
+
+    .press-scroll {
+      display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch; padding: 0 var(--margin-mobile) 16px; scrollbar-width: none;
     }
-    .task-row {
-      display: flex; align-items: center;
-      gap: 10px; padding: 8px 0;
+    .press-scroll::-webkit-scrollbar { display: none; }
+    .press-scroll .press-card { flex: 0 0 268px; scroll-snap-align: start; }
+    @media (min-width: 768px) { .press-scroll { display: none; } }
+
+    .press-card { display: flex; flex-direction: column; text-decoration: none; color: inherit; min-width: 250px; }
+    .press-card__image {
+      position: relative; width: 100%; aspect-ratio: 268/221; border-radius: var(--radius);
+      overflow: hidden; background: var(--color-gray-light);
     }
-    .task-dot {
-      width: 6px; height: 6px; border-radius: 50%;
+    .press-card__image img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-base); }
+    @media (hover: hover) { .press-card:hover .press-card__image img { transform: scale(1.03); } }
+    .press-card:focus-visible { outline: var(--focus-ring-width) solid var(--color-blue); outline-offset: var(--focus-ring-offset); border-radius: var(--radius); }
+
+    .press-card__body { padding-top: 12px; }
+    .press-card__title {
+      font-family: var(--font-display); font-weight: var(--weight-bold);
+      font-size: 15.7px; line-height: 19.2px; letter-spacing: 0.16px; color: var(--color-blue); margin: 0;
+      display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    @media (min-width: 1024px) { .press-card__title { font-size: 18px; line-height: 21.2px; letter-spacing: 0.54px; -webkit-line-clamp: 3; } }
+    @media (hover: hover) { .press-card:hover .press-card__title { text-decoration: underline; text-underline-offset: 2px; } }
+
+    .press-card__card-divider { width: 100%; height: 1px; background: rgba(0,0,0,0.15); margin: 12px 0 8px; }
+    .press-card__date {
+      font-family: var(--font-ui); font-weight: var(--weight-bold);
+      font-size: 12px; line-height: 15.7px; letter-spacing: 0.24px; text-transform: uppercase; color: var(--color-blue);
+    }
+    @media (min-width: 1024px) { .press-card__date { font-size: 14px; line-height: 0.85; letter-spacing: 0.84px; color: var(--color-black); } }
+
+    .arrow-nav { display: none; align-items: center; gap: 8px; }
+    @media (min-width: 1024px) { .arrow-nav { display: flex; } }
+    .arrow-nav__btn {
+      display: flex; align-items: center; justify-content: center; width: 32px; height: 32px;
+      border: 1.5px solid var(--color-black); border-radius: 50%; background: none; cursor: pointer; padding: 0;
+      transition: background-color var(--transition-fast), border-color var(--transition-fast);
+    }
+    .arrow-nav__btn svg { width: 14px; height: 14px; fill: none; stroke: var(--color-black); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .arrow-nav__btn:hover { background: var(--color-black); }
+    .arrow-nav__btn:hover svg { stroke: var(--color-white); }
+    .arrow-nav__btn:focus-visible { outline: var(--focus-ring-width) solid var(--color-blue); outline-offset: var(--focus-ring-offset); }
+    .arrow-nav__btn:disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+    .arrow-nav__btn--prev svg { transform: rotate(180deg); }
+
+
+    /* ==========================================================================
+       14. VISIT SITE LINK
+       ========================================================================== */
+    .visit-site-link {
+      text-decoration: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-ui); font-weight: var(--weight-bold); font-size: 14px;
+      line-height: 0.85; letter-spacing: 0.84px; text-transform: uppercase; color: var(--color-white);
+      transition: opacity var(--transition-fast);
+    }
+    .visit-site-link__arrow { width: 14px; height: 12px; flex-shrink: 0; transition: transform var(--transition-base); fill: currentColor; }
+    .visit-site-link__text { position: relative; padding-bottom: 4px; }
+    .visit-site-link__text::after {
+      content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1px;
+      background: currentColor; opacity: 0.6; transition: opacity var(--transition-fast);
+    }
+    .visit-site-link:hover { opacity: 0.85; }
+    .visit-site-link:hover .visit-site-link__arrow { transform: translateX(4px); }
+    .visit-site-link:hover .visit-site-link__text::after { opacity: 1; }
+    .visit-site-link--sm { font-family: var(--font-body); font-size: 9px; letter-spacing: 0.34px; gap: 5px; }
+    .visit-site-link--sm .visit-site-link__arrow { width: 10px; height: 8px; }
+    .visit-site-link--list { font-family: var(--font-ui); font-weight: var(--weight-semibold); font-size: 9px; letter-spacing: 0.91px; gap: 5px; }
+    .visit-site-link--list .visit-site-link__arrow { width: 10px; height: 8px; }
+
+
+    /* ==========================================================================
+       15. BUTTON
+       ========================================================================== */
+    .btn {
+      appearance: none; border: none; background: none; cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 24px;
+      font-family: var(--font-display); font-weight: var(--weight-bold); font-size: 18px;
+      line-height: 21.2px; letter-spacing: 0.54px; background-color: var(--color-blue); color: var(--color-white);
+      border-radius: var(--radius); transition: background-color var(--transition-fast), transform var(--transition-fast);
+    }
+    .btn:hover { background-color: #0050CC; }
+    .btn:active { background-color: #003DA6; transform: scale(0.98); }
+    .btn:focus-visible { outline: var(--focus-ring-width) solid var(--color-white); outline-offset: var(--focus-ring-offset); }
+
+
+    /* ==========================================================================
+       04. SECTION WRAPPER
+       ========================================================================== */
+    .section-wrapper { position: relative; width: 100%; }
+    .section-wrapper__inner {
+      width: 100%; max-width: var(--content-max-width); margin: 0 auto;
+      padding: 60px var(--margin-mobile);
+    }
+    @media (min-width: 768px) { .section-wrapper__inner { padding: 80px 30px; } }
+    @media (min-width: 1024px) { .section-wrapper__inner { padding: 80px var(--margin-desktop); } }
+
+    .section-wrapper[data-variant="light"] { background: var(--color-white); color: var(--color-black); }
+    .section-wrapper[data-variant="dark"] { background: var(--color-navy); color: var(--color-white); position: relative; }
+    .section-wrapper[data-variant="accent"] { background: var(--color-red); color: var(--color-white); position: relative; overflow: hidden; }
+    .section-wrapper[data-bleed="true"] .section-wrapper__inner { max-width: none; padding-left: 0; padding-right: 0; }
+
+    /* FIX 11: Decorative background shapes on dark sections */
+    .section-wrapper[data-variant="dark"]::before,
+    .section-wrapper[data-variant="dark"]::after {
+      content: ''; position: absolute; border-radius: 50%; pointer-events: none;
+      background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+    }
+    .section-wrapper[data-variant="dark"]::before {
+      width: 800px; height: 800px; top: -200px; right: -200px;
+    }
+    .section-wrapper[data-variant="dark"]::after {
+      width: 600px; height: 600px; bottom: -100px; right: 100px;
+    }
+
+    /* FIX 19: Decorative shapes on accent (red/Instagram) section */
+    .section-wrapper[data-variant="accent"]::before {
+      content: ''; position: absolute; width: 700px; height: 700px;
+      top: -250px; right: -150px; border-radius: 50%; pointer-events: none;
+      background: radial-gradient(circle, rgba(0,0,0,0.06) 0%, transparent 65%);
+    }
+
+
+    /* ==========================================================================
+       05. SITE FOOTER
+       ========================================================================== */
+    .site-footer { background: var(--color-navy); color: var(--color-white); width: 100%; position: relative; overflow: hidden; }
+    /* FIX 22: Decorative background element */
+    .site-footer::before {
+      content: ''; position: absolute; width: 900px; height: 900px;
+      top: -300px; right: -250px; border-radius: 50%; pointer-events: none;
+      background: radial-gradient(circle, rgba(255,255,255,0.025) 0%, transparent 65%);
+    }
+    .site-footer::after {
+      content: ''; position: absolute; width: 500px; height: 500px;
+      bottom: -150px; left: 30%; border-radius: 50%; pointer-events: none;
+      background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 65%);
+    }
+    .site-footer__inner { max-width: var(--content-max-width); margin: 0 auto; padding: 40px var(--margin-mobile); position: relative; z-index: 1; }
+    @media (min-width: 1024px) { .site-footer__inner { padding: 54px var(--margin-desktop) 40px; } }
+
+    .site-footer__main { display: flex; flex-direction: column; gap: 32px; }
+    @media (min-width: 1024px) { .site-footer__main { flex-direction: row; align-items: flex-start; gap: 0; } }
+
+    .site-footer__logo { order: 4; padding-bottom: 16px; }
+    @media (min-width: 1024px) { .site-footer__logo { order: 0; flex: 0 0 auto; margin-right: auto; padding-bottom: 0; } }
+    /* FIX 21: Footer logo is 334×199px in Figma — the full logo with bolt + text */
+    .site-footer .wordmark { width: 100%; max-width: 335px; }
+    @media (min-width: 1024px) { .site-footer .wordmark { width: 335px; height: auto; } }
+    .site-footer .wordmark svg { fill: none; } /* Footer logo has its own fill colors */
+
+    .site-footer__col { display: flex; flex-direction: column; }
+    @media (min-width: 1024px) { .site-footer__col { min-width: 160px; margin-left: 40px; } }
+
+    .site-footer__label {
+      font-family: var(--font-ui); font-weight: var(--weight-semibold);
+      font-size: 12px; line-height: 32px; letter-spacing: 1.2px; text-transform: uppercase; margin: 0 0 4px;
+    }
+    .site-footer__link {
+      font-family: var(--font-display); font-weight: var(--weight-bold);
+      font-size: 20px; line-height: 22px; letter-spacing: 0.8px; text-transform: uppercase;
+      text-decoration: none; color: var(--color-white); transition: opacity var(--transition-fast); display: block; margin-bottom: 4px;
+    }
+    @media (min-width: 1024px) { .site-footer__link { font-size: 18px; line-height: 21.2px; letter-spacing: 0.54px; } }
+    .site-footer__link:hover { opacity: 0.7; }
+    .site-footer__link:focus-visible { outline: var(--focus-ring-width) solid var(--color-white); outline-offset: var(--focus-ring-offset); border-radius: 2px; }
+
+    .site-footer__email {
+      font-family: var(--font-body); font-weight: var(--weight-regular);
+      font-size: 22px; line-height: 23px; letter-spacing: 0.44px;
+      text-decoration: underline; color: var(--color-white); transition: opacity var(--transition-fast);
+    }
+    @media (min-width: 1024px) { .site-footer__email { font-size: 24px; line-height: 30px; text-decoration: none; } }
+    .site-footer__email:hover { opacity: 0.7; }
+
+    .site-footer__legal { margin-top: 40px; display: flex; flex-direction: column; gap: 6px; }
+    @media (min-width: 1024px) { .site-footer__legal { flex-direction: row; gap: 16px; } }
+    .site-footer__legal-text, .site-footer__legal-link {
+      font-family: var(--font-ui); font-weight: var(--weight-regular);
+      font-size: 12px; line-height: 14px; letter-spacing: 0.6px; color: var(--color-white); opacity: 0.8;
+    }
+    .site-footer__legal-link { text-decoration: none; transition: opacity var(--transition-fast); }
+    .site-footer__legal-link:hover { opacity: 1; }
+
+
+    /* ==========================================================================
+       PLACEHOLDER IMAGES (for demo — replace with real assets)
+       ========================================================================== */
+    /* Wireframe placeholder boxes */
+    .ph {
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; height: 100%;
+      background: #E0E0E0;
+      font-family: var(--font-ui); font-size: 10px; font-weight: 600;
+      color: #999; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .ph--1, .ph--2, .ph--3, .ph--4, .ph--5, .ph--6 { background: #E0E0E0; }
+    .ph-logo {
+      width: 60%; height: 50%;
+      border: 1.5px solid #D0D0D0; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-ui); font-size: 9px; font-weight: 600;
+      color: #B0B0B0; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    /* Wireframe image icon (SVG cross) */
+    .ph::before {
+      content: '';
+      width: 32px; height: 32px; margin-right: 6px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B0B0B0' stroke-width='1.5'%3E%3Crect x='3' y='3' width='18' height='18' rx='2'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'/%3E%3Cpath d='M21 15l-5-5L5 21'/%3E%3C/svg%3E");
+      background-size: contain; background-repeat: no-repeat;
       flex-shrink: 0;
     }
-    .td-done { background: #22c55e; }
-    .td-active { background: #171717; }
-    .td-upcoming { background: #d4d4d4; }
-    .td-recurring { background: #a3a3a3; }
-    .task-name { font-size: 13px; flex: 1; }
-    .task-name.active { font-weight: 600; }
-    .task-name.done { color: #a3a3a3; text-decoration: line-through; }
-    .task-priority {
-      font-size: 10px; letter-spacing: 0.06em;
-      text-transform: uppercase; margin-right: 8px;
-    }
-    .task-priority.high { color: #171717; font-weight: 600; }
-    .task-priority.medium { color: #a3a3a3; font-weight: 400; }
-    .task-due {
-      font-size: 11px; color: #a3a3a3;
-      font-variant-numeric: tabular-nums;
-      min-width: 56px; text-align: right;
+    .ph-logo::before {
+      content: '';
+      width: 24px; height: 24px; margin-right: 4px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C0C0C0' stroke-width='1.5'%3E%3Crect x='3' y='3' width='18' height='18' rx='2'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'/%3E%3Cpath d='M21 15l-5-5L5 21'/%3E%3C/svg%3E");
+      background-size: contain; background-repeat: no-repeat;
+      flex-shrink: 0;
     }
 
-    /* ── Needs ── */
-    .needs-table {
-      border: 2px solid #171717;
-    }
-    .needs-header, .needs-row {
-      display: grid; grid-template-columns: 1fr 110px 100px;
-      padding: 12px 20px;
-    }
-    .needs-header {
-      background: #171717; color: #fafaf9;
-      font-size: 10px; font-weight: 600;
-      letter-spacing: 0.1em; text-transform: uppercase;
-    }
-    .needs-row {
-      font-size: 13px; border-bottom: 1px solid #f0f0f0;
-    }
-    .needs-row:last-child { border-bottom: none; }
-    .needs-row .when { font-size: 12px; color: #737373; }
-    .needs-row .when.urgent { color: #171717; font-weight: 600; }
-    .needs-row .owner { font-size: 12px; color: #737373; }
-
-    /* ── Footer ── */
-    .footer {
-      border-top: 2px solid #171717; padding-top: 24px;
-      margin-top: 16px;
-      display: flex; justify-content: space-between;
-      align-items: center;
-    }
-    .footer-text { font-size: 11px; color: #a3a3a3; }
-    .footer-brand {
-      display: flex; align-items: center; gap: 10px;
-      font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
-      text-transform: uppercase; color: #a3a3a3;
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 700px) {
-      .header { padding: 28px 24px 24px; }
-      .header h1 { font-size: 32px; }
-      .week-display { font-size: 40px; }
-      .content { padding: 0 24px 48px; }
-      .phases { grid-template-columns: 1fr; }
-      .phase { border-right: none; border-bottom: 1px solid #e5e5e5; }
-      .phase:last-child { border-bottom: none; }
-      .phase-weeks { font-size: 24px; }
-      .needs-header, .needs-row {
-        grid-template-columns: 1fr 90px 80px;
-        padding: 10px 14px;
-      }
-    }
+    /* SVG arrow template for visit-site-link */
+    .vsl-arrow { viewBox: 0 0 14 12; }
   </style>
 </head>
 <body>
 
-  <!-- ════ GATE ════ -->
-  <div id="gate" class="gate">
-    <div class="gate-inner">
-      <svg width="48" height="48" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.8911 27.6641V5.90942H16.1623C23.8885 5.90942 28.7364 10.1513 28.7364 16.7867C28.7364 23.4222 23.8885 27.6641 16.1623 27.6641H4.8911ZM9.86013 23.3919H16.1623C20.8889 23.3919 23.6461 20.7862 23.6461 16.7867C23.6461 12.7873 20.8889 10.1816 16.132 10.1816H9.86013V23.3919Z" fill="#111"/><path d="M39.7251 5.90942H60.8132V10.2422H44.6941V14.4234H59.0861V18.6956H44.6941V23.3313H60.8132V27.6641H39.7251V5.90942Z" fill="#111"/><path d="M77.617 20.0893V27.6641H72.5571V5.90942H86.2522C91.3728 5.90942 94.7359 8.33334 94.7359 12.9994C94.7359 17.6351 91.3728 20.0893 86.2522 20.0893H77.617ZM77.617 15.8475H85.9795C88.3732 15.8475 89.7366 14.787 89.7366 12.9994C89.7366 11.2117 88.3732 10.1816 85.9795 10.1816H77.617V15.8475Z" fill="#111"/><path d="M13.799 39.2375H19.5255L30.3422 60.9922H24.8581L22.5554 56.3261H10.6176L8.31488 60.9922H2.92167L13.799 39.2375ZM16.6168 44.2066L12.6779 52.1449H20.5254L16.6168 44.2066Z" fill="#111"/><path d="M44.285 53.266V60.9922H39.2251V39.2375H53.0717C58.1316 39.2375 61.5251 41.6918 61.5251 46.2366C61.5251 49.5089 59.6769 51.7813 56.6167 52.7509L62.0402 60.9922H56.2531L51.3144 53.266H44.285ZM44.285 49.1453H52.799C55.1926 49.1453 56.5561 48.0848 56.5561 46.3275C56.5561 44.5399 55.1926 43.5097 52.799 43.5097H44.285V49.1453Z" fill="#111"/><path d="M95.2813 43.5703H85.8584V60.9922H80.7984V43.5703H71.3452V39.2375H95.2813V43.5703Z" fill="#111"/><path d="M16.2078 94.6556C8.63309 94.6556 4.87602 90.5955 4.87602 84.2933V72.5676H9.93594V83.8994C9.93594 87.7474 11.7236 90.2319 16.2078 90.2319C20.6921 90.2319 22.4494 87.7474 22.4494 83.8994V72.5676H27.5093V84.2933C27.5093 90.5955 23.7523 94.6556 16.2078 94.6556Z" fill="#111"/><path d="M44.285 86.596V94.3223H39.2251V72.5676H53.0717C58.1316 72.5676 61.5251 75.0218 61.5251 79.5667C61.5251 82.839 59.6769 85.1114 56.6167 86.081L62.0402 94.3223H56.2531L51.3144 86.596H44.285ZM44.285 82.4754H52.799C55.1926 82.4754 56.5561 81.4149 56.5561 79.6576C56.5561 77.8699 55.1926 76.8398 52.799 76.8398H44.285V82.4754Z" fill="#111"/><path d="M73.0571 72.5676H94.1452V76.9004H78.0261V81.0816H92.4181V85.3538H78.0261V89.9895H94.1452V94.3223H73.0571V72.5676Z" fill="#111"/></svg>
-      <div class="gate-label">Client Dashboard</div>
-      <input type="password" id="gate-input" placeholder="Enter password" autocomplete="off" />
-      <div class="gate-error" id="gate-error"></div>
-      <div class="gate-hint">Contact your project lead for access</div>
+  <!-- ================================================================
+       MOBILE MENU (fixed overlay)
+       ================================================================ -->
+  <div class="mobile-menu" id="mobileMenu" data-open="false">
+    <div class="mobile-menu__overlay">
+      <button class="mobile-menu__close" aria-label="Close menu" onclick="closeMenu()"></button>
+      <nav class="mobile-menu__nav">
+        <a href="index.html#about" class="mobile-menu__nav-item" onclick="closeMenu()">About</a>
+        <a href="team.html" class="mobile-menu__nav-item" onclick="closeMenu()">Team</a>
+        <a href="index.html#press" class="mobile-menu__nav-item" onclick="closeMenu()">Press</a>
+        <a href="index.html#contact" class="mobile-menu__nav-item" onclick="closeMenu()">Contact</a>
+        <a href="index.html#careers" class="mobile-menu__nav-item" onclick="closeMenu()">Careers</a>
+      </nav>
+      <div class="mobile-menu__social">
+        <a href="#" class="social-icon" style="color:var(--color-black)" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg></a>
+        <a href="#" class="social-icon" style="color:var(--color-black)" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+        <a href="#" class="social-icon" style="color:var(--color-black)" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+      </div>
     </div>
   </div>
 
-  <!-- ════ DASHBOARD ════ -->
-  <div id="dashboard" class="dashboard">
-    <header class="header">
-      <div class="header-top">
-        <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.8911 27.6641V5.90942H16.1623C23.8885 5.90942 28.7364 10.1513 28.7364 16.7867C28.7364 23.4222 23.8885 27.6641 16.1623 27.6641H4.8911ZM9.86013 23.3919H16.1623C20.8889 23.3919 23.6461 20.7862 23.6461 16.7867C23.6461 12.7873 20.8889 10.1816 16.132 10.1816H9.86013V23.3919Z" fill="#111"/><path d="M39.7251 5.90942H60.8132V10.2422H44.6941V14.4234H59.0861V18.6956H44.6941V23.3313H60.8132V27.6641H39.7251V5.90942Z" fill="#111"/><path d="M77.617 20.0893V27.6641H72.5571V5.90942H86.2522C91.3728 5.90942 94.7359 8.33334 94.7359 12.9994C94.7359 17.6351 91.3728 20.0893 86.2522 20.0893H77.617ZM77.617 15.8475H85.9795C88.3732 15.8475 89.7366 14.787 89.7366 12.9994C89.7366 11.2117 88.3732 10.1816 85.9795 10.1816H77.617V15.8475Z" fill="#111"/><path d="M13.799 39.2375H19.5255L30.3422 60.9922H24.8581L22.5554 56.3261H10.6176L8.31488 60.9922H2.92167L13.799 39.2375ZM16.6168 44.2066L12.6779 52.1449H20.5254L16.6168 44.2066Z" fill="#111"/><path d="M44.285 53.266V60.9922H39.2251V39.2375H53.0717C58.1316 39.2375 61.5251 41.6918 61.5251 46.2366C61.5251 49.5089 59.6769 51.7813 56.6167 52.7509L62.0402 60.9922H56.2531L51.3144 53.266H44.285ZM44.285 49.1453H52.799C55.1926 49.1453 56.5561 48.0848 56.5561 46.3275C56.5561 44.5399 55.1926 43.5097 52.799 43.5097H44.285V49.1453Z" fill="#111"/><path d="M95.2813 43.5703H85.8584V60.9922H80.7984V43.5703H71.3452V39.2375H95.2813V43.5703Z" fill="#111"/><path d="M16.2078 94.6556C8.63309 94.6556 4.87602 90.5955 4.87602 84.2933V72.5676H9.93594V83.8994C9.93594 87.7474 11.7236 90.2319 16.2078 90.2319C20.6921 90.2319 22.4494 87.7474 22.4494 83.8994V72.5676H27.5093V84.2933C27.5093 90.5955 23.7523 94.6556 16.2078 94.6556Z" fill="#111"/><path d="M44.285 86.596V94.3223H39.2251V72.5676H53.0717C58.1316 72.5676 61.5251 75.0218 61.5251 79.5667C61.5251 82.839 59.6769 85.1114 56.6167 86.081L62.0402 94.3223H56.2531L51.3144 86.596H44.285ZM44.285 82.4754H52.799C55.1926 82.4754 56.5561 81.4149 56.5561 79.6576C56.5561 77.8699 55.1926 76.8398 52.799 76.8398H44.285V82.4754Z" fill="#111"/><path d="M73.0571 72.5676H94.1452V76.9004H78.0261V81.0816H92.4181V85.3538H78.0261V89.9895H94.1452V94.3223H73.0571V72.5676Z" fill="#111"/></svg>
-        <div class="header-right">
-          <div class="week-display" id="week-num"></div>
-          <div class="week-sub" id="week-sub"></div>
-        </div>
+  <!-- ================================================================
+       STICKY MOBILE NAV
+       ================================================================ -->
+  <div class="sticky-mobile-nav" id="stickyNav" data-visible="false">
+    <div class="sticky-mobile-nav__inner">
+      <a href="index.html" class="wordmark" style="color:var(--color-red)"><svg width="166" height="36" viewBox="0 0 166 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g>
+<path d="M8.14982 16.6279C1.77516 16.6279 0.0010972 14.8926 0.0010972 9.29434V-0.000764847H5.05225V9.08582C5.05225 12.0581 5.82312 12.6943 8.55814 12.6943H9.05798C11.8352 12.6943 12.5639 12.0369 12.5639 9.08582V-0.000764847H17.615V9.29434C17.615 14.8926 15.841 16.6279 9.49093 16.6279H8.1463H8.14982Z" fill="currentColor"/>
+<path d="M40.168 16.3947H32.681L25.4228 4.98964H25.2398V16.3947H20.4843V-0.000734329H27.9713L35.2295 11.4291H35.4125V-0.000734329H40.168V16.3947Z" fill="currentColor"/>
+<path d="M47.9919 16.3948H43.0323V-0.000684738H54.1131C59.0728 -0.000684738 60.7377 1.14442 60.7377 4.33232V4.84832C60.7377 7.30817 59.8964 8.41086 57.6436 8.69007V8.85264C59.7803 9.22727 60.7377 9.67259 60.7377 12.6909V16.3912H55.7569V12.9241C55.7569 11.4044 55.3275 10.9803 52.8671 10.9803H47.9954V16.3912H47.9919V16.3948ZM47.9919 3.67495V7.30464H53.6555C55.1832 7.30464 55.7499 6.93 55.7499 5.64353V5.50216C55.7499 4.07432 55.1586 3.67495 52.9304 3.67495H47.9919Z" fill="currentColor"/>
+<path d="M68.5693 16.3947H63.6097V-0.000709534H68.5693V16.3947Z" fill="currentColor"/>
+<path d="M83.9031 16.3947H77.532L70.2492 -0.000709534H76.0078L80.8091 11.4998H80.9921L85.8356 -0.000709534H91.1824L83.9031 16.3947Z" fill="currentColor"/>
+<path d="M109.559 16.3948H103.963L102.551 13.115H94.2229L92.836 16.3948H87.4434L94.7227 -0.000684738H102.255L109.563 16.3948H109.559ZM98.2955 3.56185L95.7928 9.41459H100.981L98.4785 3.56185H98.2919H98.2955Z" fill="currentColor"/>
+<path d="M125.687 16.3948H111.237V-0.000684738H116.197V12.2738H125.687V16.3983V16.3948Z" fill="currentColor"/>
+<path d="M143.893 16.3948H128.556V-0.000684738H143.893V3.69615H133.516V6.31858H143.893V10.0437H133.516V12.6909H143.893V16.3912V16.3948Z" fill="currentColor"/>
+<path d="M165.034 8.52393C165.034 14.2848 162.669 16.3912 156.114 16.3912H146.762V-0.000709534H156.023C162.574 -0.000709534 165.034 2.13045 165.034 7.89483V8.52393ZM151.721 3.86224V12.5282H155.432C159.321 12.5282 159.983 11.1958 159.983 8.33661V8.08215C159.983 5.22293 159.321 3.86577 155.432 3.86577H151.721V3.86224Z" fill="currentColor"/>
+<path d="M8.80696 35.9998C4.03036 35.9998 0.545595 34.8759 0 31.0377H5.27995C5.70939 32.2323 6.96602 32.4444 9.39831 32.4444C12.1544 32.4444 13.1295 32.0238 13.1506 30.8964V30.709C13.1506 29.8432 12.693 29.4438 11.0562 29.4226L6.64218 29.26C2.09086 29.0727 0.408315 27.8322 0.408315 24.6725V24.51C0.408315 20.7389 2.91101 19.1449 8.71192 19.1449H9.3244C14.0588 19.1449 17.4238 20.5268 17.9694 24.3226H12.6895C12.3269 23.0821 11.1653 22.7075 8.8668 22.7075C6.22682 22.7075 5.45595 23.1281 5.45595 24.2272V24.2944C5.45595 25.1603 5.88539 25.5596 7.52569 25.6268L11.9186 25.7682C16.4699 25.9095 18.1525 27.2419 18.1525 30.3097V30.4723C18.1525 34.5967 15.3295 35.9998 9.59543 35.9998H8.7964H8.80344H8.80696Z" fill="currentColor"/>
+<path d="M25.7135 35.7636H20.7539V19.3682H31.7186C36.6325 19.3682 38.4523 20.8667 38.4523 24.9877V25.4577C38.4523 29.3207 36.5198 31.01 31.7186 31.01H25.7135V35.7636ZM25.7135 23.0473V27.3556H30.9935C33.0421 27.3556 33.4751 26.8184 33.4751 25.2704V25.1078C33.4751 23.5139 32.9752 23.0473 30.9724 23.0473H25.7171H25.7135Z" fill="currentColor"/>
+<path d="M49.4471 36.0002C42.8965 36.0002 40.3234 33.8902 40.3234 28.1329V27.0337C40.3234 21.2729 42.8965 19.1382 49.4471 19.1382H50.7214C57.272 19.1382 59.8698 21.2694 59.8698 27.0337V28.1329C59.8698 33.8938 57.2755 36.0002 50.7214 36.0002H49.4471ZM50.3553 32.1089C54.178 32.1089 54.8151 30.7023 54.8151 27.9173V27.214C54.8151 24.4007 54.178 23.0224 50.3553 23.0224H49.8308C45.9835 23.0224 45.371 24.4043 45.371 27.214V27.9173C45.371 30.7023 45.987 32.1089 49.8308 32.1089H50.3553Z" fill="currentColor"/>
+<path d="M67.151 35.7636H62.1914V19.3682H73.2723C78.2319 19.3682 79.8968 20.5133 79.8968 23.7012V24.2172C79.8968 26.677 79.0556 27.7797 76.7993 28.0554V28.2215C78.9394 28.5961 79.8968 29.0415 79.8968 32.0597V35.7601H74.9161V32.293C74.9161 30.7732 74.4867 30.3491 72.0262 30.3491H67.1546V35.7601L67.151 35.7636ZM67.151 23.0473V26.677H72.8147C74.3388 26.677 74.9091 26.3024 74.9091 25.0159V24.8746C74.9091 23.4467 74.3177 23.0473 72.0896 23.0473H67.151Z" fill="currentColor"/>
+<path d="M93.5181 35.7636H88.5584V23.4927H81.874V19.3682H100.248V23.4927H93.5216V35.7636H93.5181Z" fill="currentColor"/>
+<path d="M110.686 36C105.909 36 102.425 34.8761 101.879 31.0379H107.159C107.588 32.2325 108.845 32.4445 111.277 32.4445C114.033 32.4445 115.008 32.024 115.03 30.8965V30.7092C115.03 29.8433 114.572 29.444 112.935 29.4228L108.521 29.2602C103.97 29.0729 102.287 27.8323 102.287 24.6727V24.5101C102.287 20.7391 104.79 19.1451 110.591 19.1451H111.207C115.941 19.1451 119.306 20.527 119.852 24.3228H114.572C114.209 23.0823 113.048 22.7077 110.749 22.7077C108.109 22.7077 107.338 23.1282 107.338 24.2274V24.2945C107.338 25.1604 107.768 25.5598 109.408 25.627L113.801 25.7683C118.352 25.9097 120.035 27.2421 120.035 30.3099V30.4724C120.035 34.5969 117.212 36 111.478 36H110.679H110.686Z" fill="currentColor"/>
+</g>
+
+</svg></a>
+      <button class="hamburger" aria-label="Open menu" onclick="openMenu()"><span class="hamburger__bar"></span><span class="hamburger__bar"></span><span class="hamburger__bar"></span></button>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       HERO
+       ================================================================ -->
+  <section class="hero" id="hero">
+    <div class="hero__media">
+      <div style="width:100%;height:100%;background:#C8C8C8;display:flex;align-items:center;justify-content:center;font-family:var(--font-ui);font-size:14px;color:#999;text-transform:uppercase;letter-spacing:1px;">Hero Video / Image</div>
+    </div>
+    <div class="hero__logo-mark">
+      <svg viewBox="0 0 434 142" xmlns="http://www.w3.org/2000/svg">
+        <path d="M156.655 100.212C166.722 97.528 170.092 102.311 164.142 110.846C157.271 120.702 160.903 125.403 172.211 121.297L434 26.2306H247.736C244.967 26.2306 241.277 27.986 239.541 30.1332L191.322 89.6114C188.635 92.8322 186.312 91.4249 188.495 87.6673L231.346 14.5129C236.025 6.52863 232.267 0 222.996 0H92.3755L0 142L156.655 100.212Z" fill="currentColor"/>
+      </svg>
+    </div>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a href="index.html" class="wordmark" style="color:var(--color-red)"><svg width="166" height="36" viewBox="0 0 166 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g>
+<path d="M8.14982 16.6279C1.77516 16.6279 0.0010972 14.8926 0.0010972 9.29434V-0.000764847H5.05225V9.08582C5.05225 12.0581 5.82312 12.6943 8.55814 12.6943H9.05798C11.8352 12.6943 12.5639 12.0369 12.5639 9.08582V-0.000764847H17.615V9.29434C17.615 14.8926 15.841 16.6279 9.49093 16.6279H8.1463H8.14982Z" fill="currentColor"/>
+<path d="M40.168 16.3947H32.681L25.4228 4.98964H25.2398V16.3947H20.4843V-0.000734329H27.9713L35.2295 11.4291H35.4125V-0.000734329H40.168V16.3947Z" fill="currentColor"/>
+<path d="M47.9919 16.3948H43.0323V-0.000684738H54.1131C59.0728 -0.000684738 60.7377 1.14442 60.7377 4.33232V4.84832C60.7377 7.30817 59.8964 8.41086 57.6436 8.69007V8.85264C59.7803 9.22727 60.7377 9.67259 60.7377 12.6909V16.3912H55.7569V12.9241C55.7569 11.4044 55.3275 10.9803 52.8671 10.9803H47.9954V16.3912H47.9919V16.3948ZM47.9919 3.67495V7.30464H53.6555C55.1832 7.30464 55.7499 6.93 55.7499 5.64353V5.50216C55.7499 4.07432 55.1586 3.67495 52.9304 3.67495H47.9919Z" fill="currentColor"/>
+<path d="M68.5693 16.3947H63.6097V-0.000709534H68.5693V16.3947Z" fill="currentColor"/>
+<path d="M83.9031 16.3947H77.532L70.2492 -0.000709534H76.0078L80.8091 11.4998H80.9921L85.8356 -0.000709534H91.1824L83.9031 16.3947Z" fill="currentColor"/>
+<path d="M109.559 16.3948H103.963L102.551 13.115H94.2229L92.836 16.3948H87.4434L94.7227 -0.000684738H102.255L109.563 16.3948H109.559ZM98.2955 3.56185L95.7928 9.41459H100.981L98.4785 3.56185H98.2919H98.2955Z" fill="currentColor"/>
+<path d="M125.687 16.3948H111.237V-0.000684738H116.197V12.2738H125.687V16.3983V16.3948Z" fill="currentColor"/>
+<path d="M143.893 16.3948H128.556V-0.000684738H143.893V3.69615H133.516V6.31858H143.893V10.0437H133.516V12.6909H143.893V16.3912V16.3948Z" fill="currentColor"/>
+<path d="M165.034 8.52393C165.034 14.2848 162.669 16.3912 156.114 16.3912H146.762V-0.000709534H156.023C162.574 -0.000709534 165.034 2.13045 165.034 7.89483V8.52393ZM151.721 3.86224V12.5282H155.432C159.321 12.5282 159.983 11.1958 159.983 8.33661V8.08215C159.983 5.22293 159.321 3.86577 155.432 3.86577H151.721V3.86224Z" fill="currentColor"/>
+<path d="M8.80696 35.9998C4.03036 35.9998 0.545595 34.8759 0 31.0377H5.27995C5.70939 32.2323 6.96602 32.4444 9.39831 32.4444C12.1544 32.4444 13.1295 32.0238 13.1506 30.8964V30.709C13.1506 29.8432 12.693 29.4438 11.0562 29.4226L6.64218 29.26C2.09086 29.0727 0.408315 27.8322 0.408315 24.6725V24.51C0.408315 20.7389 2.91101 19.1449 8.71192 19.1449H9.3244C14.0588 19.1449 17.4238 20.5268 17.9694 24.3226H12.6895C12.3269 23.0821 11.1653 22.7075 8.8668 22.7075C6.22682 22.7075 5.45595 23.1281 5.45595 24.2272V24.2944C5.45595 25.1603 5.88539 25.5596 7.52569 25.6268L11.9186 25.7682C16.4699 25.9095 18.1525 27.2419 18.1525 30.3097V30.4723C18.1525 34.5967 15.3295 35.9998 9.59543 35.9998H8.7964H8.80344H8.80696Z" fill="currentColor"/>
+<path d="M25.7135 35.7636H20.7539V19.3682H31.7186C36.6325 19.3682 38.4523 20.8667 38.4523 24.9877V25.4577C38.4523 29.3207 36.5198 31.01 31.7186 31.01H25.7135V35.7636ZM25.7135 23.0473V27.3556H30.9935C33.0421 27.3556 33.4751 26.8184 33.4751 25.2704V25.1078C33.4751 23.5139 32.9752 23.0473 30.9724 23.0473H25.7171H25.7135Z" fill="currentColor"/>
+<path d="M49.4471 36.0002C42.8965 36.0002 40.3234 33.8902 40.3234 28.1329V27.0337C40.3234 21.2729 42.8965 19.1382 49.4471 19.1382H50.7214C57.272 19.1382 59.8698 21.2694 59.8698 27.0337V28.1329C59.8698 33.8938 57.2755 36.0002 50.7214 36.0002H49.4471ZM50.3553 32.1089C54.178 32.1089 54.8151 30.7023 54.8151 27.9173V27.214C54.8151 24.4007 54.178 23.0224 50.3553 23.0224H49.8308C45.9835 23.0224 45.371 24.4043 45.371 27.214V27.9173C45.371 30.7023 45.987 32.1089 49.8308 32.1089H50.3553Z" fill="currentColor"/>
+<path d="M67.151 35.7636H62.1914V19.3682H73.2723C78.2319 19.3682 79.8968 20.5133 79.8968 23.7012V24.2172C79.8968 26.677 79.0556 27.7797 76.7993 28.0554V28.2215C78.9394 28.5961 79.8968 29.0415 79.8968 32.0597V35.7601H74.9161V32.293C74.9161 30.7732 74.4867 30.3491 72.0262 30.3491H67.1546V35.7601L67.151 35.7636ZM67.151 23.0473V26.677H72.8147C74.3388 26.677 74.9091 26.3024 74.9091 25.0159V24.8746C74.9091 23.4467 74.3177 23.0473 72.0896 23.0473H67.151Z" fill="currentColor"/>
+<path d="M93.5181 35.7636H88.5584V23.4927H81.874V19.3682H100.248V23.4927H93.5216V35.7636H93.5181Z" fill="currentColor"/>
+<path d="M110.686 36C105.909 36 102.425 34.8761 101.879 31.0379H107.159C107.588 32.2325 108.845 32.4445 111.277 32.4445C114.033 32.4445 115.008 32.024 115.03 30.8965V30.7092C115.03 29.8433 114.572 29.444 112.935 29.4228L108.521 29.2602C103.97 29.0729 102.287 27.8323 102.287 24.6727V24.5101C102.287 20.7391 104.79 19.1451 110.591 19.1451H111.207C115.941 19.1451 119.306 20.527 119.852 24.3228H114.572C114.209 23.0823 113.048 22.7077 110.749 22.7077C108.109 22.7077 107.338 23.1282 107.338 24.2274V24.2945C107.338 25.1604 107.768 25.5598 109.408 25.627L113.801 25.7683C118.352 25.9097 120.035 27.2421 120.035 30.3099V30.4724C120.035 34.5969 117.212 36 111.478 36H110.679H110.686Z" fill="currentColor"/>
+</g>
+
+</svg></a>
+        <div class="site-header__logo-mark logo-mark logo-mark--sm" style="color:var(--color-red)"><svg viewBox="0 0 434 142" xmlns="http://www.w3.org/2000/svg"><path d="M156.655 100.212C166.722 97.528 170.092 102.311 164.142 110.846C157.271 120.702 160.903 125.403 172.211 121.297L434 26.2306H247.736C244.967 26.2306 241.277 27.986 239.541 30.1332L191.322 89.6114C188.635 92.8322 186.312 91.4249 188.495 87.6673L231.346 14.5129C236.025 6.52863 232.267 0 222.996 0H92.3755L0 142L156.655 100.212Z" fill="currentColor"/></svg></div>
+        <nav class="site-header__nav">
+          <a href="index.html#about" class="site-header__nav-link">About</a>
+          <a href="team.html" class="site-header__nav-link">Team</a>
+          <a href="index.html#press" class="site-header__nav-link">Press</a>
+          <a href="index.html#contact" class="site-header__nav-link">Contact</a>
+          <a href="index.html#careers" class="site-header__nav-link">Careers</a>
+        </nav>
+        <button class="hamburger" aria-label="Open menu" onclick="openMenu()"><span class="hamburger__bar"></span><span class="hamburger__bar"></span><span class="hamburger__bar"></span></button>
       </div>
-      <div class="micro" style="margin-bottom: 8px;">Client Dashboard</div>
-      <h1 id="client-name"></h1>
-      <div class="header-meta" id="engagement-meta"></div>
     </header>
+  </section>
 
-    <div class="content">
-      <!-- Progress -->
-      <div class="section">
-        <div class="progress-row">
-          <span class="micro">Engagement Progress</span>
-          <span class="micro" id="date-range"></span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill" id="progress-fill"></div>
-          <div class="progress-marker" id="progress-marker"></div>
-        </div>
-      </div>
+  <!-- ================================================================
+       STICKY HEADLINE
+       ================================================================ -->
+  <section class="sticky-headline" id="about">
+    <div class="sticky-headline__track">
+      <h2 class="sticky-headline__text">Unrivaled Experiences for Young Athletes</h2>
+    </div>
+  </section>
 
-      <!-- Phases -->
-      <div class="section">
-        <div class="section-label">Project Phases</div>
-        <div class="phases" id="phases"></div>
-      </div>
+  <!-- ================================================================
+       STATS
+       ================================================================ -->
+  <section class="section-wrapper" data-variant="light" style="padding:0;">
+    <div class="stat-badges" data-animate id="statBadges">
+      <div class="stat-badge"><div class="stat-badge__shape"><div class="stat-badge__bg"><div class="stat-badge__bg-image" style="background:#AAA;"></div></div><div class="stat-badge__content"><span class="stat-badge__number">15</span><span class="stat-badge__label">Venues &<br>Properties</span></div></div></div>
+      <div class="stat-badge"><div class="stat-badge__shape"><div class="stat-badge__bg"><div class="stat-badge__bg-image" style="background:#AAA;"></div></div><div class="stat-badge__content"><span class="stat-badge__number">1.7m</span><span class="stat-badge__label">Visitors<br>Each Year</span></div></div></div>
+      <div class="stat-badge"><div class="stat-badge__shape"><div class="stat-badge__bg"><div class="stat-badge__bg-image" style="background:#AAA;"></div></div><div class="stat-badge__content"><span class="stat-badge__number">635k</span><span class="stat-badge__label">Athletes<br>Annually</span></div></div></div>
+    </div>
+  </section>
 
-      <!-- Milestones -->
-      <div class="section">
-        <div class="section-label">Key Milestones</div>
-        <div id="milestones"></div>
-      </div>
-
-      <!-- Tasks -->
-      <div class="section">
-        <div class="tabs-header">
-          <div class="section-label" style="margin-bottom: 0; border: none; padding: 0;">Tasks</div>
-          <div class="tabs" id="task-tabs"></div>
-        </div>
-        <div id="tasks-container"></div>
-      </div>
-
-      <!-- Needs -->
-      <div class="section" id="needs-section">
-        <div class="section-label">Needs from SunStrong</div>
-        <div class="needs-table" id="needs-table"></div>
-      </div>
-
-      <!-- Footer -->
-      <div class="footer">
-        <span class="footer-text">Confidential — prepared for SunStrong Management</span>
-        <div class="footer-brand">
-          <span>Departure</span>
-          <svg width="20" height="20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.8911 27.6641V5.90942H16.1623C23.8885 5.90942 28.7364 10.1513 28.7364 16.7867C28.7364 23.4222 23.8885 27.6641 16.1623 27.6641H4.8911ZM9.86013 23.3919H16.1623C20.8889 23.3919 23.6461 20.7862 23.6461 16.7867C23.6461 12.7873 20.8889 10.1816 16.132 10.1816H9.86013V23.3919Z" fill="#a3a3a3"/><path d="M39.7251 5.90942H60.8132V10.2422H44.6941V14.4234H59.0861V18.6956H44.6941V23.3313H60.8132V27.6641H39.7251V5.90942Z" fill="#a3a3a3"/><path d="M77.617 20.0893V27.6641H72.5571V5.90942H86.2522C91.3728 5.90942 94.7359 8.33334 94.7359 12.9994C94.7359 17.6351 91.3728 20.0893 86.2522 20.0893H77.617ZM77.617 15.8475H85.9795C88.3732 15.8475 89.7366 14.787 89.7366 12.9994C89.7366 11.2117 88.3732 10.1816 85.9795 10.1816H77.617V15.8475Z" fill="#a3a3a3"/><path d="M13.799 39.2375H19.5255L30.3422 60.9922H24.8581L22.5554 56.3261H10.6176L8.31488 60.9922H2.92167L13.799 39.2375ZM16.6168 44.2066L12.6779 52.1449H20.5254L16.6168 44.2066Z" fill="#a3a3a3"/><path d="M44.285 53.266V60.9922H39.2251V39.2375H53.0717C58.1316 39.2375 61.5251 41.6918 61.5251 46.2366C61.5251 49.5089 59.6769 51.7813 56.6167 52.7509L62.0402 60.9922H56.2531L51.3144 53.266H44.285ZM44.285 49.1453H52.799C55.1926 49.1453 56.5561 48.0848 56.5561 46.3275C56.5561 44.5399 55.1926 43.5097 52.799 43.5097H44.285V49.1453Z" fill="#a3a3a3"/><path d="M95.2813 43.5703H85.8584V60.9922H80.7984V43.5703H71.3452V39.2375H95.2813V43.5703Z" fill="#a3a3a3"/><path d="M16.2078 94.6556C8.63309 94.6556 4.87602 90.5955 4.87602 84.2933V72.5676H9.93594V83.8994C9.93594 87.7474 11.7236 90.2319 16.2078 90.2319C20.6921 90.2319 22.4494 87.7474 22.4494 83.8994V72.5676H27.5093V84.2933C27.5093 90.5955 23.7523 94.6556 16.2078 94.6556Z" fill="#a3a3a3"/><path d="M44.285 86.596V94.3223H39.2251V72.5676H53.0717C58.1316 72.5676 61.5251 75.0218 61.5251 79.5667C61.5251 82.839 59.6769 85.1114 56.6167 86.081L62.0402 94.3223H56.2531L51.3144 86.596H44.285ZM44.285 82.4754H52.799C55.1926 82.4754 56.5561 81.4149 56.5561 79.6576C56.5561 77.8699 55.1926 76.8398 52.799 76.8398H44.285V82.4754Z" fill="#a3a3a3"/><path d="M73.0571 72.5676H94.1452V76.9004H78.0261V81.0816H92.4181V85.3538H78.0261V89.9895H94.1452V94.3223H73.0571V72.5676Z" fill="#a3a3a3"/></svg>
+  <!-- ================================================================
+       EVENTS CAROUSEL
+       ================================================================ -->
+  <section class="section-wrapper" data-variant="light" data-bleed="true">
+    <div class="section-wrapper__inner" style="padding-top:0;padding-bottom:68px;">
+      <div class="carousel" data-variant="events" data-speed="40">
+        <div class="carousel__track">
+          <div class="carousel__slide"><div class="carousel__slide-image carousel__slide-image--narrow"><div class="ph ph--1"></div></div><p class="carousel__slide-venue">Ripken</p><p class="carousel__slide-desc">2025 championships All-Star game</p></div>
+          <div class="carousel__slide"><div class="carousel__slide-image carousel__slide-image--medium"><div class="ph ph--2"></div></div><p class="carousel__slide-venue">Rocker B Ranch</p><p class="carousel__slide-desc">Ripken National Qualifiers</p></div>
+          <div class="carousel__slide"><div class="carousel__slide-image carousel__slide-image--wide"><div class="ph ph--3"></div></div><p class="carousel__slide-venue">Ripken Aberdeen</p><p class="carousel__slide-desc">2025 champ</p></div>
+          <div class="carousel__slide"><div class="carousel__slide-image carousel__slide-image--narrow"><div class="ph ph--4"></div></div><p class="carousel__slide-venue">Unrivaled Flag</p><p class="carousel__slide-desc">2025 high school girls championships</p></div>
+          <div class="carousel__slide"><div class="carousel__slide-image carousel__slide-image--wide"><div class="ph ph--5"></div></div><p class="carousel__slide-venue">Ripken Myrtle Beach</p><p class="carousel__slide-desc">Softball championships</p></div>
+          <!-- Duplicate set -->
+          <div class="carousel__slide" aria-hidden="true"><div class="carousel__slide-image carousel__slide-image--narrow"><div class="ph ph--1"></div></div><p class="carousel__slide-venue">Ripken</p><p class="carousel__slide-desc">2025 championships All-Star game</p></div>
+          <div class="carousel__slide" aria-hidden="true"><div class="carousel__slide-image carousel__slide-image--medium"><div class="ph ph--2"></div></div><p class="carousel__slide-venue">Rocker B Ranch</p><p class="carousel__slide-desc">Ripken National Qualifiers</p></div>
+          <div class="carousel__slide" aria-hidden="true"><div class="carousel__slide-image carousel__slide-image--wide"><div class="ph ph--3"></div></div><p class="carousel__slide-venue">Ripken Aberdeen</p><p class="carousel__slide-desc">2025 champ</p></div>
+          <div class="carousel__slide" aria-hidden="true"><div class="carousel__slide-image carousel__slide-image--narrow"><div class="ph ph--4"></div></div><p class="carousel__slide-venue">Unrivaled Flag</p><p class="carousel__slide-desc">2025 high school girls championships</p></div>
+          <div class="carousel__slide" aria-hidden="true"><div class="carousel__slide-image carousel__slide-image--wide"><div class="ph ph--5"></div></div><p class="carousel__slide-venue">Ripken Myrtle Beach</p><p class="carousel__slide-desc">Softball championships</p></div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <script>
-  // ══════════════════════════════════════════
-  // CONFIG
-  // ══════════════════════════════════════════
+  <!-- ================================================================
+       OUR BRANDS
+       ================================================================ -->
+  <section class="section-wrapper" data-variant="dark">
+    <div class="section-wrapper__inner" style="padding-top: 32px;">
+      <div class="section-header" data-variant="dark">
+        <h2 class="section-header__headline">OUR BRANDS</h2>
+        <p class="section-header__desc">Our growing network of premier youth sports venues and programming enables athletes to develop the building blocks for success by delivering experiences that are inclusive &amp; premium, competitive &amp; developmental, inspiring &amp; memory-making.</p>
+      </div>
+      <div class="brand-grid" data-animate id="brandGrid">
+        <div class="brand-card"><div class="brand-card__image"><div class="ph-logo">Cooperstown</div><div class="brand-card__overlay"></div></div><p class="brand-card__name">Cooperstown All Star Village</p><div class="brand-card__divider"></div><a href="#" class="visit-site-link visit-site-link--sm"><svg class="visit-site-link__arrow" viewBox="0 0 14 12"><path d="M8.5 0.5L13.5 6L8.5 11.5M0.5 6H13" stroke="currentColor" stroke-width="1.2" fill="none"/></svg><span class="visit-site-link__text">Visit Site</span></a><div class="brand-card__divider"></div></div>
+        <div class="brand-card"><div class="brand-card__image"><div class="ph-logo">Ripken</div><div class="brand-card__overlay"></div></div><p class="brand-card__name">Ripken Baseball</p><div class="brand-card__divider"></div><a href="#" class="visit-site-link visit-site-link--sm"><svg class="visit-site-link__arrow" viewBox="0 0 14 12"><path d="M8.5 0.5L13.5 6L8.5 11.5M0.5 6H13" stroke="currentColor" stroke-width="1.2" fill="none"/></svg><span class="visit-site-link__text">Visit Site</span></a><div class="brand-card__divider"></div></div>
+        <div class="brand-card"><div class="brand-card__image"><div class="ph-logo">Flag</div><div class="brand-card__overlay"></div></div><p class="brand-card__name">Unrivaled Flag</p><div class="brand-card__divider"></div><a href="#" class="visit-site-link visit-site-link--sm"><svg class="visit-site-link__arrow" viewBox="0 0 14 12"><path d="M8.5 0.5L13.5 6L8.5 11.5M0.5 6H13" stroke="currentColor" stroke-width="1.2" fill="none"/></svg><span class="visit-site-link__text">Visit Site</span></a><div class="brand-card__divider"></div></div>
+        <div class="brand-card"><div class="brand-card__image"><div class="ph-logo">Rocker B</div><div class="brand-card__overlay"></div></div><p class="brand-card__name">Rocker B Ranch</p><div class="brand-card__divider"></div><a href="#" class="visit-site-link visit-site-link--sm"><svg class="visit-site-link__arrow" viewBox="0 0 14 12"><path d="M8.5 0.5L13.5 6L8.5 11.5M0.5 6H13" stroke="currentColor" stroke-width="1.2" fill="none"/></svg><span class="visit-site-link__text">Visit Site</span></a><div class="brand-card__divider"></div></div>
+        <div class="brand-card"><div class="brand-card__image"><div class="ph-logo">Aberdeen</div><div class="brand-card__overlay"></div></div><p class="brand-card__name">Ripken Experience Aberdeen</p><div class="brand-card__divider"></div><a href="#" class="visit-site-link visit-site-link--sm"><svg class="visit-site-link__arrow" viewBox="0 0 14 12"><path d="M8.5 0.5L13.5 6L8.5 11.5M0.5 6H13" stroke="currentColor" stroke-width="1.2" fill="none"/></svg><span class="visit-site-link__text">Visit Site</span></a><div class="brand-card__divider"></div></div>
+        <div class="brand-card"><div class="brand-card__image"><div class="ph-logo">Myrtle Beach</div><div class="brand-card__overlay"></div></div><p class="brand-card__name">Ripken Experience Myrtle Beach</p><div class="brand-card__divider"></div><a href="#" class="visit-site-link visit-site-link--sm"><svg class="visit-site-link__arrow" viewBox="0 0 14 12"><path d="M8.5 0.5L13.5 6L8.5 11.5M0.5 6H13" stroke="currentColor" stroke-width="1.2" fill="none"/></svg><span class="visit-site-link__text">Visit Site</span></a><div class="brand-card__divider"></div></div>
+        <div class="brand-card"><div class="brand-card__image"><div class="ph-logo">Pigeon Forge</div><div class="brand-card__overlay"></div></div><p class="brand-card__name">Ripken Experience Pigeon Forge</p><div class="brand-card__divider"></div><a href="#" class="visit-site-link visit-site-link--sm"><svg class="visit-site-link__arrow" viewBox="0 0 14 12"><path d="M8.5 0.5L13.5 6L8.5 11.5M0.5 6H13" stroke="currentColor" stroke-width="1.2" fill="none"/></svg><span class="visit-site-link__text">Visit Site</span></a><div class="brand-card__divider"></div></div>
+        <div class="brand-card"><div class="brand-card__image"><div class="ph-logo">ForeverLawn</div><div class="brand-card__overlay"></div></div><p class="brand-card__name">ForeverLawn Sports Complex</p><div class="brand-card__divider"></div><a href="#" class="visit-site-link visit-site-link--sm"><svg class="visit-site-link__arrow" viewBox="0 0 14 12"><path d="M8.5 0.5L13.5 6L8.5 11.5M0.5 6H13" stroke="currentColor" stroke-width="1.2" fill="none"/></svg><span class="visit-site-link__text">Visit Site</span></a><div class="brand-card__divider"></div></div>
+      </div>
+      <div class="brand-list">
+        <div class="brand-list-item"><p class="brand-list-item__name">Diamond Nation</p><a href="#" class="visit-site-link visit-site-link--list"><svg class="visit-site-link__arrow" viewBox="0 0 14 12"><path d="M8.5 0.5L13.5 6L8.5 11.5M0.5 6H13" stroke="currentColor" stroke-width="1.2" fill="none"/></svg><span class="visit-site-link__text">Visit Site</span></a></div>
+        <div class="brand-list-item"><p class="brand-list-item__name">Big League Dreams</p><a href="#" class="visit-site-link visit-site-link--list"><svg class="visit-site-link__arrow" viewBox="0 0 14 12"><path d="M8.5 0.5L13.5 6L8.5 11.5M0.5 6H13" stroke="currentColor" stroke-width="1.2" fill="none"/></svg><span class="visit-site-link__text">Visit Site</span></a></div>
+        <div class="brand-list-item"><p class="brand-list-item__name">Sports Force Park</p><a href="#" class="visit-site-link visit-site-link--list"><svg class="visit-site-link__arrow" viewBox="0 0 14 12"><path d="M8.5 0.5L13.5 6L8.5 11.5M0.5 6H13" stroke="currentColor" stroke-width="1.2" fill="none"/></svg><span class="visit-site-link__text">Visit Site</span></a></div>
+        <div class="brand-list-item"><p class="brand-list-item__name">Under the Lights Flag Football</p><a href="#" class="visit-site-link visit-site-link--list"><svg class="visit-site-link__arrow" viewBox="0 0 14 12"><path d="M8.5 0.5L13.5 6L8.5 11.5M0.5 6H13" stroke="currentColor" stroke-width="1.2" fill="none"/></svg><span class="visit-site-link__text">Visit Site</span></a></div>
+      </div>
+      <div class="brand-grid__load-more"><button class="btn">LOAD MORE</button></div>
+    </div>
+  </section>
 
-  var PASSWORD_HASH = "3867da6e50ffd505c7272e6f450c988f7e227a2b22fa8a156040e51cb709ab3a";
+  <!-- ================================================================
+       PRESS
+       ================================================================ -->
+  <section class="section-wrapper" data-variant="light" id="press">
+    <div class="section-wrapper__inner" style="padding-top: 48px; padding-bottom: 48px;">
+      <div class="press-section-inner">
+        <div class="press-header-row">
+          <div class="section-header" data-variant="light">
+            <p class="section-header__label">Press</p>
+            <h2 class="section-header__headline">How We're Changing the Game</h2>
+          </div>
+          <div class="arrow-nav">
+            <button class="arrow-nav__btn arrow-nav__btn--prev" aria-label="Previous" disabled><svg viewBox="0 0 14 14"><polyline points="5 2 10 7 5 12"/></svg></button>
+            <button class="arrow-nav__btn arrow-nav__btn--next" aria-label="Next"><svg viewBox="0 0 14 14"><polyline points="5 2 10 7 5 12"/></svg></button>
+          </div>
+        </div>
+        <div class="press-divider"></div>
+        <div class="press-grid">
+        <a href="#" class="press-card"><div class="press-card__image"><div class="ph ph--6"></div></div><div class="press-card__body"><h3 class="press-card__title">Unrivaled Sports Announces Long-Term Investment in Twin Creeks Sports Complex</h3><div class="press-card__card-divider"></div><time class="press-card__date">12.9.2025</time></div></a>
+        <a href="#" class="press-card"><div class="press-card__image"><div class="ph ph--2"></div></div><div class="press-card__body"><h3 class="press-card__title">Ashlea Klam Is On A Mission To Shape The Future Of Flag Football</h3><div class="press-card__card-divider"></div><time class="press-card__date">12.3.2025</time></div></a>
+        <a href="#" class="press-card"><div class="press-card__image"><div class="ph ph--3"></div></div><div class="press-card__body"><h3 class="press-card__title">NFL Legend Drew Brees Announces Major Flag Football Partnership With Unrivaled Sports</h3><div class="press-card__card-divider"></div><time class="press-card__date">10.21.2025</time></div></a>
+        <a href="#" class="press-card"><div class="press-card__image"><div class="ph ph--4"></div></div><div class="press-card__body"><h3 class="press-card__title">Hall Of Fame Resort &amp; Entertainment Company Partners With Josh Harris And David Blitzer</h3><div class="press-card__card-divider"></div><time class="press-card__date">12.9.2025</time></div></a>
+        <a href="#" class="press-card"><div class="press-card__image"><div class="ph ph--5"></div></div><div class="press-card__body"><h3 class="press-card__title">Ripken Baseball Announces Inaugural National Championship Event</h3><div class="press-card__card-divider"></div><time class="press-card__date">10.1.2025</time></div></a>
+      </div>
+      </div><!-- end press-section-inner -->
+    </div>
+    <!-- Mobile scroll version -->
+    <div class="press-scroll">
+      <a href="#" class="press-card"><div class="press-card__image"><div class="ph ph--6"></div></div><div class="press-card__body"><h3 class="press-card__title">Unrivaled Sports Announces Long-Term Investment in Twin Creeks Sports Complex</h3><div class="press-card__card-divider"></div><time class="press-card__date">12.9.2025</time></div></a>
+      <a href="#" class="press-card"><div class="press-card__image"><div class="ph ph--2"></div></div><div class="press-card__body"><h3 class="press-card__title">Ashlea Klam Is On A Mission To Shape The Future Of Flag Football</h3><div class="press-card__card-divider"></div><time class="press-card__date">12.3.2025</time></div></a>
+      <a href="#" class="press-card"><div class="press-card__image"><div class="ph ph--3"></div></div><div class="press-card__body"><h3 class="press-card__title">NFL Legend Drew Brees Announces Major Flag Football Partnership</h3><div class="press-card__card-divider"></div><time class="press-card__date">10.21.2025</time></div></a>
+      <a href="#" class="press-card"><div class="press-card__image"><div class="ph ph--4"></div></div><div class="press-card__body"><h3 class="press-card__title">Hall Of Fame Resort Partners With Josh Harris And David Blitzer</h3><div class="press-card__card-divider"></div><time class="press-card__date">12.9.2025</time></div></a>
+    </div>
+  </section>
 
-  var E = {
-    client: "SunStrong Management",
-    lead: "Ben Fogarty",
-    type: "Fractional Design Leadership",
-    startDate: "2026-03-13",
-    endDate: "2026-06-15",
-    lastUpdated: "2026-03-17",
-    totalWeeks: 12,
-    dateRange: "Mar 13 – Jun 15, 2026",
-  };
+  <!-- ================================================================
+       INSTAGRAM / CTA
+       ================================================================ -->
+  <section class="section-wrapper" data-variant="accent">
+    <div class="section-wrapper__inner" style="padding-top: 48px; padding-bottom: 0;">
+      <div class="section-header" data-variant="dark">
+        <p class="section-header__label">Instagram</p>
+        <h2 class="section-header__headline">Catch Us in Action</h2>
+      </div>
+    </div>
+    <div class="carousel" data-variant="instagram" data-speed="25">
+      <div class="carousel__track">
+        <div class="carousel__slide"><a href="#" class="carousel__slide-link"><div class="ph" style="width:271px;height:338px;border-radius:6px;">Photo</div></a></div>
+        <div class="carousel__slide"><a href="#" class="carousel__slide-link"><div class="ph" style="width:271px;height:338px;border-radius:6px;">Photo</div></a></div>
+        <div class="carousel__slide"><a href="#" class="carousel__slide-link"><div class="ph" style="width:271px;height:338px;border-radius:6px;">Photo</div></a></div>
+        <div class="carousel__slide"><a href="#" class="carousel__slide-link"><div class="ph" style="width:271px;height:338px;border-radius:6px;">Photo</div></a></div>
+        <div class="carousel__slide"><a href="#" class="carousel__slide-link"><div class="ph" style="width:271px;height:338px;border-radius:6px;">Photo</div></a></div>
+        <div class="carousel__slide" aria-hidden="true"><a href="#" class="carousel__slide-link" tabindex="-1"><div class="ph" style="width:271px;height:338px;border-radius:6px;">Photo</div></a></div>
+        <div class="carousel__slide" aria-hidden="true"><a href="#" class="carousel__slide-link" tabindex="-1"><div class="ph" style="width:271px;height:338px;border-radius:6px;">Photo</div></a></div>
+        <div class="carousel__slide" aria-hidden="true"><a href="#" class="carousel__slide-link" tabindex="-1"><div class="ph" style="width:271px;height:338px;border-radius:6px;">Photo</div></a></div>
+        <div class="carousel__slide" aria-hidden="true"><a href="#" class="carousel__slide-link" tabindex="-1"><div class="ph" style="width:271px;height:338px;border-radius:6px;">Photo</div></a></div>
+        <div class="carousel__slide" aria-hidden="true"><a href="#" class="carousel__slide-link" tabindex="-1"><div class="ph" style="width:271px;height:338px;border-radius:6px;">Photo</div></a></div>
+      </div>
+    </div>
+  </section>
 
-  var PHASES = [
-    { weeks: "1–3", label: "Discovery & Audit", dates: "Mar 13 – Apr 3", status: "active", desc: "Brand audit, agency alignment, site strategy, content planning" },
-    { weeks: "4–8", label: "Design & Development", dates: "Apr 6 – May 22", status: "upcoming", desc: "Creative direction, page design, build, QA, and launch" },
-    { weeks: "9–12", label: "Iteration & Extension", dates: "May 25 – Jun 15", status: "upcoming", desc: "Live feedback, refinements, and extended deliverables" },
-  ];
+  <!-- ================================================================
+       FOOTER
+       ================================================================ -->
+  <footer class="site-footer" id="contact">
+    <div class="site-footer__inner">
+      <div class="site-footer__main">
+        <div class="site-footer__logo"><a href="index.html" class="wordmark"><svg width="335" height="200" viewBox="0 0 335 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g>
+<path d="M17.0377 160.08C4.13993 160.08 0.550781 156.584 0.550781 145.301V126.572H10.7698V144.884C10.7698 150.872 12.3293 152.155 17.8623 152.155H18.8733C24.4921 152.155 25.9658 150.831 25.9658 144.884V126.572H36.1848V145.301C36.1848 156.584 32.5957 160.08 19.7464 160.08H17.0265H17.034H17.0377Z" fill="white"/>
+<path d="M81.8199 159.603H66.6724L51.9875 136.62H51.6181V159.603H41.9961V126.562H57.1436L71.8285 149.596H72.1979V126.562H81.8199V159.603Z" fill="white"/>
+<path d="M97.6543 159.603H87.6182V126.562H110.037C120.073 126.562 123.439 128.867 123.439 135.292V136.333C123.439 141.287 121.737 143.511 117.178 144.074V144.403C121.502 145.156 123.439 146.056 123.439 152.137V159.595H113.362V152.607C113.362 149.544 112.492 148.69 107.515 148.69H97.6581V159.595H97.6506V159.603H97.6543ZM97.6543 133.967V141.284H109.112C112.205 141.284 113.35 140.53 113.35 137.937V137.654C113.35 134.777 112.153 133.971 107.646 133.971H97.6543V133.967Z" fill="white"/>
+<path d="M139.287 159.603H129.251V126.562H139.287V159.603Z" fill="white"/>
+<path d="M170.305 159.603H157.415L142.678 126.562H154.329L164.045 149.738H164.414L174.219 126.562H185.039L170.309 159.603H170.301H170.305Z" fill="white"/>
+<path d="M222.222 159.603H210.899L208.045 152.991H191.192L188.387 159.603H177.474L192.211 126.562H207.452L222.237 159.603H222.222ZM199.43 133.74L194.367 145.533H204.866L199.803 133.74H199.426H199.434H199.43Z" fill="white"/>
+<path d="M254.851 159.603H225.615V126.562H235.651V151.298H254.851V159.61V159.603Z" fill="white"/>
+<path d="M291.687 159.603H260.657V126.562H291.687V134.012H270.69V139.295H291.687V146.802H270.69V152.137H291.687V159.603Z" fill="white"/>
+<path d="M334.465 143.742C334.465 155.353 329.678 159.595 316.418 159.595H297.495V126.562H316.232C329.488 126.562 334.465 130.856 334.465 142.474V143.742ZM307.528 134.348V151.812H315.034C322.903 151.812 324.242 149.126 324.242 143.366V142.851C324.242 137.09 322.903 134.355 315.034 134.355H307.528V134.348Z" fill="white"/>
+<path d="M17.8218 199.103C8.15872 199.103 1.10728 196.838 0.00292969 189.104H10.6846C11.5539 191.511 14.0946 191.94 19.0157 191.94C24.5934 191.94 26.5634 191.093 26.6081 188.821V188.444C26.6081 186.698 25.6829 185.896 22.3698 185.851L13.438 185.522C4.23006 185.146 0.823732 182.646 0.823732 176.277V175.949C0.823732 168.349 5.88659 165.137 17.6241 165.137H18.8627C28.4437 165.137 35.2489 167.92 36.3533 175.572H25.6717C24.9367 173.072 22.5862 172.319 17.9375 172.319C12.5948 172.319 11.0353 173.166 11.0353 175.382V175.516C11.0353 177.262 11.9046 178.064 15.2214 178.202L24.1084 178.486C33.3163 178.769 36.7226 181.456 36.7226 187.638V187.966C36.7226 196.279 31.0106 199.107 19.4074 199.107H17.792H17.8143L17.8218 199.103Z" fill="white"/>
+<path d="M52.0332 198.629H41.9971V165.592H64.1811C74.124 165.592 77.8064 168.61 77.8064 176.915V177.863C77.8064 185.649 73.8964 189.052 64.1811 189.052H52.0295V198.629H52.0332ZM52.0332 173.005V181.687H62.7149C66.8599 181.687 67.7367 180.605 67.7367 177.486V177.158C67.7367 173.945 66.7256 173.005 62.6738 173.005H52.0332Z" fill="white"/>
+<path d="M99.8727 199.114C86.6168 199.114 81.4121 194.861 81.4121 183.262V181.045C81.4121 169.435 86.6168 165.137 99.8727 165.137H102.451C115.707 165.137 120.96 169.431 120.96 181.045V183.262C120.96 194.872 115.71 199.114 102.451 199.114H99.8727ZM101.72 191.279C109.454 191.279 110.745 188.444 110.745 182.832V181.415C110.745 175.744 109.454 172.968 101.72 172.968H100.66C92.8735 172.968 91.6348 175.751 91.6348 181.415V182.832C91.6348 188.444 92.881 191.279 100.66 191.279H101.72Z" fill="white"/>
+<path d="M135.694 198.629H125.658V165.592H148.077C158.113 165.592 161.482 167.898 161.482 174.322V175.363C161.482 180.321 159.781 182.541 155.214 183.097V183.433C159.546 184.187 161.482 185.086 161.482 191.167V198.625H151.405V191.637C151.405 188.574 150.536 187.72 145.559 187.72H135.702V198.625L135.694 198.633V198.629ZM135.694 173.005V180.321H147.152C150.237 180.321 151.39 179.568 151.39 176.975V176.691C151.39 173.815 150.193 173.009 145.686 173.009H135.694V173.005Z" fill="white"/>
+<path d="M188.868 198.633H178.832V173.904H165.308V165.592H202.486V173.904H188.876V198.633H188.868Z" fill="white"/>
+<path d="M223.779 199.103C214.116 199.103 207.064 196.838 205.96 189.104H216.642C217.511 191.511 220.052 191.94 224.976 191.94C230.554 191.94 232.524 191.093 232.569 188.821V188.444C232.569 186.698 231.644 185.896 228.331 185.851L219.399 185.522C210.191 185.146 206.784 182.646 206.784 176.277V175.949C206.784 168.349 211.847 165.137 223.585 165.137H224.831C234.408 165.137 241.217 167.92 242.321 175.572H231.64C230.905 173.072 228.554 172.319 223.906 172.319C218.563 172.319 217.003 173.166 217.003 175.382V175.516C217.003 177.262 217.873 178.064 221.19 178.202L230.077 178.486C239.285 178.769 242.691 181.456 242.691 187.638V187.966C242.691 196.279 236.979 199.107 225.376 199.107H223.76H223.775L223.779 199.103Z" fill="white"/>
+<path d="M120.532 77.3082C128.277 75.2376 130.87 78.9274 126.293 85.5125C121.006 93.1161 123.8 96.7426 132.501 93.575L333.922 20.2326H190.61C188.48 20.2326 185.64 21.5869 184.305 23.2435L147.204 69.13C145.138 71.6148 143.35 70.5291 145.029 67.6302L177.999 11.1926C181.6 5.03284 178.708 -0.00390625 171.575 -0.00390625H71.075L0.000976562 109.547L120.532 77.3082Z" fill="#FF0000"/>
+</g>
 
-  var MILESTONES = [
-    { label: "Engagement start", date: "Mar 13", s: "done" },
-    { label: "Kickoff meeting", date: "Mar 16", s: "done" },
-    { label: "Brand audit complete", date: "Mar 27", s: "active" },
-    { label: "Site strategy locked", date: "Apr 1", s: "upcoming" },
-    { label: "Creative direction approved", date: "Apr 13", s: "upcoming" },
-    { label: "Homepage design approved", date: "Apr 20", s: "upcoming" },
-    { label: "Launch 1 — site live", date: "May 22", s: "upcoming" },
-    { label: "Launch 2 — iteration complete", date: "Jun 15", s: "upcoming" },
-  ];
+</svg></a></div>
+        <div class="site-footer__col"><p class="site-footer__label"><span class="hide-desktop">Socials</span><span class="hide-mobile">Follow Us</span></p><a href="#" class="site-footer__link">Facebook</a><a href="#" class="site-footer__link">Instagram</a><a href="#" class="site-footer__link">LinkedIn</a></div>
+        <div class="site-footer__col" id="careers"><p class="site-footer__label">Careers</p><a href="#" class="site-footer__link">Overview</a><a href="#" class="site-footer__link">Open Roles</a></div>
+        <div class="site-footer__col"><p class="site-footer__label">Contact</p><a href="/cdn-cgi/l/email-protection#fa93949c95ba8f9488938c9b969f9e898a95888e89d4999597" class="site-footer__email"><span class="__cf_email__" data-cfemail="1b72757d745b6e7569726d7a777e7f686b74696f6835787476">[email&#160;protected]</span></a></div>
+      </div>
+      <div class="site-footer__legal"><a href="#" class="site-footer__legal-link">Privacy Policy</a><p class="site-footer__legal-text">© 2026 Unrivaled Sports - All rights reserved</p></div>
+    </div>
+  </footer>
 
-  var TASKS = {
-    website: {
-      label: "Website Project",
-      sections: [
-        { label: "Discovery & Audit · Wks 1–3", tasks: [
-          { n: "Brand audit", d: "Mar 27", s: "ip" },
-          { n: "Review existing agency work", d: "Mar 23", s: "ip" },
-          { n: "Site strategy and content planning", d: "Apr 1", s: "ns" },
-          { n: "Site architecture / sitemap", d: "Apr 3", s: "ns" },
-          { n: "Gather content and assets from client", d: "Apr 3", s: "ns" },
-        ]},
-        { label: "Design & Development · Wks 4–8", tasks: [
-          { n: "Creative direction / territories", d: "Apr 13", s: "ns" },
-          { n: "Homepage design", d: "Apr 20", s: "ns" },
-          { n: "Inner page designs", d: "Apr 29", s: "ns" },
-          { n: "Platform setup and CMS architecture", d: "May 1", s: "ns" },
-          { n: "Build — homepage and global components", d: "May 8", s: "ns" },
-          { n: "Build — inner pages and CMS templates", d: "May 15", s: "ns" },
-          { n: "QA, responsive testing, and polish", d: "May 18", s: "ns" },
-          { n: "Launch 1 — live site", d: "May 22", s: "ns" },
-        ]},
-        { label: "Iteration & Extension · Wks 9–12", tasks: [
-          { n: "Collect live site feedback", d: "May 29", s: "ns" },
-          { n: "Website refinements and iteration", d: "Jun 12", s: "ns" },
-          { n: "Launch 2 — iteration complete", d: "Jun 15", s: "ns" },
-        ]},
-      ],
-    },
-    retainer: {
-      label: "Retainer",
-      tasks: [
-        { n: "Kickoff and onboarding", d: "Mar 18", p: "High", s: "done" },
-        { n: "Collect all existing brand assets and agency work", d: "Mar 20", p: "High", s: "ip" },
-        { n: "Establish coordination with identity agency", d: "Mar 20", p: "High", s: "ip" },
-        { n: "Weekly sync — Tuesdays 4pm EST", d: "Ongoing", p: "Medium", s: "rec" },
-        { n: "Identify Month 3 extension priorities", d: "May 1", p: "Medium", s: "ns" },
-      ],
-    },
-  };
 
-  var NEEDS = [
-    { item: "Brand agency brief and supporting docs", urgency: "This week", owner: "Lauren" },
-    { item: "Recommend attendees for stakeholder interviews", urgency: "This week", owner: "Lauren" },
-    { item: "Brand assets and existing materials", urgency: "This week", owner: "Lauren" },
-    { item: "Schedule bi-weekly sprint retro", urgency: "This week", owner: "Ben / Lauren" },
-    { item: "Content: copy, photos, testimonials, bios", urgency: "By Apr 3", owner: "SunStrong" },
-  ];
-
-  // ══════════════════════════════════════════
-  // ENGINE
-  // ══════════════════════════════════════════
-
-  async function hp(pw) {
-    var buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(pw));
-    return Array.from(new Uint8Array(buf)).map(function(b) { return b.toString(16).padStart(2, "0"); }).join("");
-  }
-
-  function dc(s) {
-    return { done:"td-done", ip:"td-active", ns:"td-upcoming", rec:"td-recurring" }[s] || "td-upcoming";
-  }
-  function mc(s) {
-    return { done:"ms-done", active:"ms-active", upcoming:"ms-upcoming" }[s] || "ms-upcoming";
-  }
-  function nc(s) {
-    return { done:"done", ip:"active", ns:"", rec:"" }[s] || "";
-  }
-
-  // Auth
-  var gi = document.getElementById("gate-input");
-  var ge = document.getElementById("gate-error");
-
-  if (sessionStorage.getItem("ds_ss") === "1") {
-    document.getElementById("gate").style.display = "none";
-    document.getElementById("dashboard").classList.add("visible");
-  }
-
-  gi.addEventListener("keydown", async function(e) {
-    if (e.key === "Enter") {
-      var h = await hp(gi.value);
-      if (h === PASSWORD_HASH) {
-        sessionStorage.setItem("ds_ss", "1");
-        document.getElementById("gate").style.display = "none";
-        document.getElementById("dashboard").classList.add("visible");
-      } else {
-        ge.textContent = "Incorrect password";
-        gi.value = "";
-        gi.focus();
-      }
+  <!-- ================================================================
+       PHASE 4: JavaScript — Scroll observers, menu, sticky nav
+       ================================================================ -->
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    /* --- Mobile Menu --- */
+    const mobileMenu = document.getElementById('mobileMenu');
+    function openMenu() {
+      mobileMenu.setAttribute('data-open', 'true');
+      document.body.classList.add('menu-open');
     }
-  });
-
-  // Render
-  (function() {
-    var start = new Date(E.startDate), end = new Date(E.endDate), now = new Date();
-    var week = Math.max(1, Math.min(Math.ceil(((now - start) / 864e5 + 1) / 7), E.totalWeeks));
-    var pct = Math.min(Math.max(((now - start) / (end - start)) * 100, 0), 100);
-
-    document.getElementById("week-num").textContent = "0" + week;
-    document.getElementById("week-sub").textContent = "of " + E.totalWeeks + " weeks · Updated " + E.lastUpdated;
-    document.getElementById("client-name").textContent = E.client;
-    document.getElementById("engagement-meta").textContent = "Prepared by Departure";
-    document.getElementById("date-range").textContent = E.dateRange;
-    document.getElementById("progress-fill").style.width = pct + "%";
-    document.getElementById("progress-marker").style.left = pct + "%";
-
-    // Phases
-    document.getElementById("phases").innerHTML = PHASES.map(function(p) {
-      return '<div class="phase ' + (p.status === "active" ? "active" : "") + '">' +
-        '<div class="phase-weeks">' + p.weeks + '</div>' +
-        '<div class="phase-name">' + p.label + '</div>' +
-        '<div class="phase-dates">' + p.dates + '</div>' +
-        '<div class="phase-desc">' + p.desc + '</div>' +
-        (p.status === "active" ? '<div class="phase-active-bar"></div>' : '') +
-        '</div>';
-    }).join("");
-
-    // Milestones
-    document.getElementById("milestones").innerHTML = MILESTONES.map(function(m) {
-      return '<div class="ms-row">' +
-        '<span class="ms-marker ' + mc(m.s) + '"></span>' +
-        '<span class="ms-label ' + m.s + '">' + m.label + '</span>' +
-        '<span class="ms-date">' + m.date + '</span></div>';
-    }).join("");
-
-    // Tasks
-    var tabs = document.getElementById("task-tabs");
-    var cont = document.getElementById("tasks-container");
-    var keys = Object.keys(TASKS);
-
-    keys.forEach(function(key, idx) {
-      var g = TASKS[key];
-      var btn = document.createElement("button");
-      btn.className = "tab-btn" + (idx === 0 ? " active" : "");
-      btn.dataset.tab = key;
-      btn.textContent = g.label;
-      tabs.appendChild(btn);
-
-      var panel = document.createElement("div");
-      panel.id = "tp-" + key;
-      panel.style.display = idx === 0 ? "block" : "none";
-
-      if (g.sections) {
-        g.sections.forEach(function(sec) {
-          var h = '<div class="task-group"><div class="task-group-label">' + sec.label + '</div>';
-          sec.tasks.forEach(function(t) {
-            h += '<div class="task-row"><span class="task-dot ' + dc(t.s) + '"></span>' +
-              '<span class="task-name ' + nc(t.s) + '">' + t.n + '</span>' +
-              '<span class="task-due">' + t.d + '</span></div>';
-          });
-          h += '</div>';
-          panel.innerHTML += h;
-        });
-      } else {
-        g.tasks.forEach(function(t) {
-          panel.innerHTML += '<div class="task-row"><span class="task-dot ' + dc(t.s) + '"></span>' +
-            '<span class="task-name ' + nc(t.s) + '">' + t.n + '</span>' +
-            (t.p ? '<span class="task-priority ' + t.p.toLowerCase() + '">' + t.p + '</span>' : '') +
-            '<span class="task-due">' + t.d + '</span></div>';
-        });
-      }
-      cont.appendChild(panel);
+    function closeMenu() {
+      mobileMenu.setAttribute('data-open', 'false');
+      document.body.classList.remove('menu-open');
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && mobileMenu.getAttribute('data-open') === 'true') closeMenu();
     });
 
-    tabs.querySelectorAll(".tab-btn").forEach(function(btn) {
-      btn.addEventListener("click", function() {
-        tabs.querySelectorAll(".tab-btn").forEach(function(b) { b.classList.remove("active"); });
-        btn.classList.add("active");
-        keys.forEach(function(k) {
-          document.getElementById("tp-" + k).style.display = k === btn.dataset.tab ? "block" : "none";
-        });
-      });
-    });
+    /* --- Sticky Mobile Nav (IntersectionObserver) --- */
+    const hero = document.getElementById('hero');
+    const stickyNav = document.getElementById('stickyNav');
+    const heroObserver = new IntersectionObserver(
+      ([entry]) => { stickyNav.setAttribute('data-visible', entry.isIntersecting ? 'false' : 'true'); },
+      { threshold: 0 }
+    );
+    heroObserver.observe(hero);
 
-    // Needs
-    var nh = '<div class="needs-header"><span>Item</span><span>When</span><span>Owner</span></div>';
-    NEEDS.forEach(function(n) {
-      nh += '<div class="needs-row"><span>' + n.item + '</span>' +
-        '<span class="when ' + (n.urgency === "Now" ? "urgent" : "") + '">' + n.urgency + '</span>' +
-        '<span class="owner">' + n.owner + '</span></div>';
-    });
-    document.getElementById("needs-table").innerHTML = nh;
-  })();
-  </script>
+    /* --- Scroll-triggered animations --- */
+    function observeAnimate(el) {
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) { el.classList.add('is-visible'); obs.unobserve(el); } },
+        { threshold: 0.2 }
+      );
+      obs.observe(el);
+    }
 
-</body>
-</html>
+    document.querySelectorAll('[data-animate]').forEach(observeAnimate);
+
+    /* --- Reduced motion preference --- */
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').match
