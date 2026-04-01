@@ -368,24 +368,25 @@
     client: "SunStrong Management",
     lead: "Ben Fogarty",
     type: "Fractional Design Leadership",
-    startDate: "2026-03-13",
+    startDate: "2026-03-16",
     endDate: "2026-06-15",
-    lastUpdated: "2026-03-17",
+    lastUpdated: "2026-04-01",
     totalWeeks: 12,
-    dateRange: "Mar 13 – Jun 15, 2026",
+    dateRange: "Mar 16 – Jun 15, 2026",
   };
 
   var PHASES = [
-    { weeks: "1–3", label: "Discovery & Audit", dates: "Mar 13 – Apr 3", status: "active", desc: "Brand audit, agency alignment, site strategy, content planning" },
+    { weeks: "1–3", label: "Discovery & Audit", dates: "Mar 16 – Apr 3", status: "active", desc: "Brand audit, agency alignment, site strategy, content planning" },
     { weeks: "4–8", label: "Design & Development", dates: "Apr 6 – May 22", status: "upcoming", desc: "Creative direction, page design, build, QA, and launch" },
     { weeks: "9–12", label: "Iteration & Extension", dates: "May 25 – Jun 15", status: "upcoming", desc: "Live feedback, refinements, and extended deliverables" },
   ];
 
   var MILESTONES = [
-    { label: "Engagement start", date: "Mar 13", s: "done" },
+    { label: "Engagement start", date: "Mar 16", s: "done" },
     { label: "Kickoff meeting", date: "Mar 16", s: "done" },
-    { label: "Brand audit complete", date: "Mar 27", s: "active" },
-    { label: "Site strategy locked", date: "Apr 1", s: "upcoming" },
+    { label: "Brand audit v2 shipped", date: "Mar 27", s: "done" },
+    { label: "Persona & JTBD workshop", date: "Mar 26", s: "done" },
+    { label: "Site architecture workshop", date: "Apr 2", s: "active" },
     { label: "Creative direction approved", date: "Apr 13", s: "upcoming" },
     { label: "Homepage design approved", date: "Apr 20", s: "upcoming" },
     { label: "Launch 1 — site live", date: "May 22", s: "upcoming" },
@@ -397,11 +398,16 @@
       label: "Website Project",
       sections: [
         { label: "Discovery & Audit · Wks 1–3", tasks: [
-          { n: "Brand audit", d: "Mar 27", s: "ip" },
-          { n: "Review existing agency work", d: "Mar 23", s: "ip" },
-          { n: "Site strategy and content planning", d: "Apr 1", s: "ns" },
-          { n: "Site architecture / sitemap", d: "Apr 3", s: "ns" },
-          { n: "Gather content and assets from client", d: "Apr 3", s: "ns" },
+          { n: "Brand audit", d: "Mar 27", s: "done" },
+          { n: "Brand audit v2", d: "Mar 27", s: "done" },
+          { n: "Discovery session 1: Personas & JTBD", d: "Mar 26", s: "done" },
+          { n: "Evaluate Metric font + color palette", d: "Mar 28", s: "ns" },
+          { n: "Meet SunStrong internal digital team", d: "Mar 28", s: "ip" },
+          { n: "Site strategy and content planning", d: "Apr 1", s: "ip" },
+          { n: "Site architecture / sitemap", d: "Apr 3", s: "ip" },
+          { n: "Discovery session 2: Site Architecture", d: "Apr 2", s: "ip" },
+          { n: "Gather content and assets from client", d: "Post-IA", s: "ip" },
+          { n: "Discovery session 3: Creative Direction", d: "Apr 7", s: "ns" },
         ]},
         { label: "Design & Development · Wks 4–8", tasks: [
           { n: "Creative direction / territories", d: "Apr 13", s: "ns" },
@@ -424,8 +430,9 @@
       label: "Retainer",
       tasks: [
         { n: "Kickoff and onboarding", d: "Mar 18", p: "High", s: "done" },
-        { n: "Collect all existing brand assets and agency work", d: "Mar 20", p: "High", s: "ip" },
-        { n: "Establish coordination with identity agency", d: "Mar 20", p: "High", s: "ip" },
+        { n: "Review existing agency work", d: "Mar 23", p: "High", s: "done" },
+        { n: "Respond to Brendon: brand audit feedback", d: "Mar 23", p: "High", s: "done" },
+        { n: "Establish coordination with identity agency", d: "Mar 20", p: "High", s: "done" },
         { n: "Weekly sync — Tuesdays 4pm EST", d: "Ongoing", p: "Medium", s: "rec" },
         { n: "Identify Month 3 extension priorities", d: "May 1", p: "Medium", s: "ns" },
       ],
@@ -433,10 +440,10 @@
   };
 
   var NEEDS = [
-    { item: "Final brand identity and color palette from Metric", urgency: "This week", owner: "Lauren" },
-    { item: "Existing photo assets", urgency: "This week", owner: "SunStrong" },
-    { item: "Stakeholder map", urgency: "This week", owner: "Lauren" },
-    { item: "Content: copy, photos, testimonials, bios", urgency: "By Apr 3", owner: "SunStrong" },
+    { item: "Color codes and font name from Metric", urgency: "Blocked", owner: "Lauren" },
+    { item: "Leadership bios and professional headshots", urgency: "This week", owner: "SunStrong" },
+    { item: "Verified metrics (customers, GW, states)", urgency: "This week", owner: "SunStrong" },
+    { item: "Photography: team, operations, installations", urgency: "By Apr 13", owner: "SunStrong" },
   ];
 
   // ══════════════════════════════════════════
